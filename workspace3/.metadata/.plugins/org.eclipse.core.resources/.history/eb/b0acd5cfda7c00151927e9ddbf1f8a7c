@@ -1,0 +1,22 @@
+module FizzBuzz
+
+public void Fb()
+{
+	for(int I <- [1 .. 101])
+	{
+		printed = false;
+		if ( I % 3 == 0)
+		{ 
+			print("Fizz");
+			printed = true;
+		}
+		if ( I % 5 == 0) 
+		{
+			print("Buzz");
+			printed = true;
+		}
+		
+		if (printed == false) println(I);
+		else println("");
+	}
+}

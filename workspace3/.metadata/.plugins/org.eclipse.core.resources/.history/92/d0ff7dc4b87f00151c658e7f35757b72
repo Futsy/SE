@@ -1,0 +1,71 @@
+module playingWithCloneDetection
+
+import List;
+import String;
+import IO;
+
+public list[str] makeStringList(int Start, int End)
+{
+	return [ "some string with number <i>" | i <- [Start..End]];
+}
+
+public list[str] toTest = makeStringList(0, 10000) + makeStringList(0,10) + makeStringList(10000, 20000) + makeStringList(0,10); 						 
+						  
+public void findClone(list[str] In,  str S1, str S2, str S3, str S4, str S5, str S6)
+{
+	switch(In)
+	{
+	    case [*str head, str i1, str i2, str i3, str i4, str i5, str i6, *str tail]:   
+		{
+	     	if(S1 == i1 && S2 == i2 && S3 == i3 && S4 == i4 && S5 == i5 && S6 == i6)
+	     	{
+	     		println("found duplicate\n\t<i1>\n\t<i2>\n\t<i3>\n\t<i4>\n\t<i5>\n\t<i6>");
+	     	}
+	     	fail;
+	     }   
+	     default:
+	     	return;
+   	}
+}
+
+public void findClone2(list[str] In, list[str] whatWeSearchFor)
+{
+	for ([*str head, *str mid, *str end] := In)
+  	if (mid == whatWeSearchFor)
+    	println("gotcha");
+}
+
+public void findClone3(list[str] In, list[str] whatWeSearchFor)
+{
+	cloneLength = size(whatWeSearchFor);
+	inputLength = size(In);
+	
+	if(inputLength < cloneLength) return [];
+	
+	loopLength = inputLength - cloneLength + 1;
+	
+	for(int i <- [0..loopLength])
+	{
+		isAClone = true;
+		for(int j <- [0..cloneLength])
+		{
+			if(In[i+j] != whatWeSearchFor[j])
+				isAClone = false;
+		}
+		
+		if(isAClone) println("Found clone <whatWeSearchFor> on lines <i> through <i+cloneLength-1>");	
+	}
+}
+
+public void findClone4(list[str] In,  str S1, str S2, str S3, str S4, str S5, str S6) {
+    switch(In) {
+        case [*str head, S1, S2, S3, S4, S5, S6, *str tail]: {
+            println("found duplicate\n\t<S1>\n\t<S2>\n\t<S3>\n\t<S4>\n\t<S5>\n\t<S6>"); 
+            fail;
+        } 
+        
+        default: 
+            return; 
+    } 
+}
+

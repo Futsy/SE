@@ -1,0 +1,24 @@
+module RascalNotes
+
+import IO;
+
+void func()
+{
+	// tuples
+	tupleA = <false, false, false>;
+	
+	// you can do nice things like swithc on a tuple
+	
+	for(int i <- [1..101])
+	{
+		switch(<i % 3 == 0, i % 5 == 0>)
+		{
+			case <true, true>: println("FizzBuzz");
+			case <true, false>: println("Fizz");
+			case <false, true>: println("Buzz");
+			default: println(i);
+		}
+	}
+}
+
+

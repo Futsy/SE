@@ -1,0 +1,122 @@
+module pointersCodeAnalyses
+
+import lang::java::m3::Core;
+import lang::java::jdt::m3::Core;
+
+import IO;
+import List;
+
+// Rascal has a lot of nice features for code inspection 
+// Int handy to unserstand the basics of it. First, it works a lot with LOC's. If we analyze some code:
+
+//public M3 tree = createM3FromEclipseProject(|project://smallsql0.21_src|);
+public M3 tree = createM3FromEclipseProject(|project://hsqldb-2.3.1|);
+
+//rascal>tree
+//M3: m3(|project://HelloWorld|)[
+//  @annotations={},
+//  @typeDependency={
+//    <|java+class:///SomeOtherClass|,|java+primitiveType:///int|>,
+//    <|java+parameter:///HelloWorld/main(java.lang.String%5B%5D)/scope(args)/scope(0)/args|,|java+array:///java/lang/String%5B%5D|>,
+//    <|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,|java+class:///java/io/PrintStream|>,
+//    <|java+method:///SomeOtherClass/SomePrivateMethod()|,|java+primitiveType:///int|>,
+//    <|java+parameter:///HelloWorld/main(java.lang.String%5B%5D)/scope(args)/scope(0)/args|,|java+class:///java/lang/String|>,
+//    <|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,|java+class:///java/lang/System|>,
+//    <|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,|java+primitiveType:///void|>,
+//    <|java+method:///SomeOtherClass/SomeMethod()|,|java+primitiveType:///int|>
+//  },
+//  @methodOverrides={},
+//  @names={
+//    <"System",|java+class:///java/lang/System|>,
+//    <"SomePrivateMethod",|java+method:///SomeOtherClass/SomePrivateMethod()|>,
+//    <"main",|java+method:///HelloWorld/main(java.lang.String%5B%5D)|>,
+//    <"args",|java+parameter:///HelloWorld/main(java.lang.String%5B%5D)/scope(args)/scope(0)/args|>,
+//    <"println",|java+method:///java/io/PrintStream/println(java.lang.String)|>,
+//    <"SomeOtherClass",|java+class:///SomeOtherClass|>,
+//    <"HelloWorld",|java+class:///HelloWorld|>,
+//    <"privmv",|java+field:///SomeOtherClass/privmv|>,
+//    <"out",|java+field:///java/lang/System/out|>,
+//    <"SomeMethod",|java+method:///SomeOtherClass/SomeMethod()|>,
+//    <"pubmv",|java+field:///SomeOtherClass/pubmv|>,
+//    <"String",|java+class:///java/lang/String|>
+//  },
+//  @implements={},
+//  @methodInvocation={<|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,|java+method:///java/io/PrintStream/println(java.lang.String)|>},
+//  @containment={
+//    <|java+class:///SomeOtherClass|,|java+field:///SomeOtherClass/privmv|>,
+//    <|java+compilationUnit:///Users/Bouke/Documents/workspace3/HelloWorld/src/HelloWorld.java|,|java+class:///HelloWorld|>,
+//    <|java+class:///SomeOtherClass|,|java+field:///SomeOtherClass/pubmv|>,
+//    <|java+class:///HelloWorld|,|java+method:///HelloWorld/main(java.lang.String%5B%5D)|>,
+//    <|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,|java+parameter:///HelloWorld/main(java.lang.String%5B%5D)/scope(args)/scope(0)/args|>,
+//    <|java+class:///SomeOtherClass|,|java+method:///SomeOtherClass/SomeMethod()|>,
+//    <|java+compilationUnit:///Users/Bouke/Documents/workspace3/HelloWorld/src/SomeOtherClass.java|,|java+class:///SomeOtherClass|>,
+//    <|java+class:///SomeOtherClass|,|java+method:///SomeOtherClass/SomePrivateMethod()|>
+//  },
+//  @documentation={<|java+compilationUnit:///Users/Bouke/Documents/workspace3/HelloWorld/src/HelloWorld.java|,|file:///Users/Bouke/Documents/workspace3/HelloWorld/src/HelloWorld.java|(80,48,<4,8>,<4,56>)>},
+//  @modifiers={
+//    <|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,static()>,
+//    <|java+method:///SomeOtherClass/SomeMethod()|,public()>,
+//    <|java+field:///SomeOtherClass/privmv|,private()>,
+//    <|java+class:///SomeOtherClass|,public()>,
+//    <|java+class:///HelloWorld|,public()>,
+//    <|java+field:///SomeOtherClass/pubmv|,public()>,
+//    <|java+method:///SomeOtherClass/SomePrivateMethod()|,private()>,
+//    <|java+method:///HelloWorld/main(java.lang.Stri...
+
+// If we want to look at metrics, we can look at containment. 
+public rel[loc from ,loc to] containment =  tree@containment;
+//rel[loc from,loc to]: {
+//  <|java+class:///SomeOtherClass|,|java+field:///SomeOtherClass/privmv|>,
+//  <|java+compilationUnit:///Users/Bouke/Documents/workspace3/HelloWorld/src/HelloWorld.java|,|java+class:///HelloWorld|>,
+//  <|java+class:///SomeOtherClass|,|java+field:///SomeOtherClass/pubmv|>,
+//  <|java+class:///HelloWorld|,|java+method:///HelloWorld/main(java.lang.String%5B%5D)|>,
+//  <|java+method:///HelloWorld/main(java.lang.String%5B%5D)|,|java+parameter:///HelloWorld/main(java.lang.String%5B%5D)/scope(args)/scope(0)/args|>,
+//  <|java+class:///SomeOtherClass|,|java+method:///SomeOtherClass/SomeMethod()|>,
+//  <|java+compilationUnit:///Users/Bouke/Documents/workspace3/HelloWorld/src/SomeOtherClass.java|,|java+class:///SomeOtherClass|>,
+//  <|java+class:///SomeOtherClass|,|java+method:///SomeOtherClass/SomePrivateMethod()|>
+//}
+
+// We get a relation from loc to loc. Which is relation of things containing other things. For instance the files containing classes
+// and the classes containing functions.
+// We could get all the functions in the project as follows:
+public list[loc] functions = [ methods | methods <- containment.to, methods.scheme == "java+method" ];
+
+// Note that it is important that we named the fields in relation 'containment' so that we can now say that we are
+// only interested at the 'to' part of that relation (there are no functions at java top level), then we get a list
+// of locations. From the documentation, we get that the parts of a loc are labled. We use this to check the "scheme"
+// part to see if this is a function
+
+// We can use this to create a relation between classes and functions with the following (not so pretty) code
+public lrel[loc,list[loc]] classToMethod = [ <class, [methods | methods <- containment[class], methods.scheme == "java+method"]> | class <- [ methods | methods <- containment.to, methods.scheme == "java+class" ] ];
+
+//lrel[loc,list[loc]]: [
+//  <|java+class:///SomeOtherClass|,[
+//    |java+method:///SomeOtherClass/SomeMethod()|,
+//    |java+method:///SomeOtherClass/SomePrivateMethod()|
+//  ]>,
+//  <|java+class:///HelloWorld|,[|java+method:///HelloWorld/main(java.lang.String%5B%5D)|]>
+//]
+
+public list[loc] files = dup([files | files <- containment.from, files.scheme == "java+compilationUnit" ]);
+public int LOC = sum ([ size(readFileLines(file)) | file <- files]);
+
+public lrel[loc, list[str]] fullSource = [ <file, readFileLines(file)> | file <- files];
+
+public int LinesOfCode(loc file)
+{
+	nrOfLines = 0;
+	
+	// when ignore
+	// [whitespace]//[anything]
+	// [ws]
+	
+	lines = readFileLines(file);
+	
+	for(/\s\\\\.*/ := lines)
+	{
+		nrOfLines = nrOfLines + 1;
+	}
+	return nrOfLines;
+}
+
+

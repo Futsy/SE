@@ -1,0 +1,50 @@
+module playingWithCloneDetection
+
+import List;
+import String;
+import IO;
+
+public list[str] makeStringList(int Start, int End)
+{
+	return [ "some string with number <i>" | i <- [Start..End]];
+}
+
+public list[str] duplicate = makeStringList(1, 10);
+public list[str] toTest = makeStringList(1000, 2000) +
+ 						  duplicate + 
+						  makeStringList(20000, 30000) +
+						  duplicate +
+						  makeStringList(3000, 4000);
+		
+// TODO: ask about why we are running out of heap here. Probably something with immutable string that leads to everything
+// being copied all the time. Can we prevent this somehow?						  
+public void searchForClone( list[str] In )
+{
+	switch(In)
+	{
+	    case [*str head, str i1, str i2, str i3, str i4, str i5, str i6, *str tail]:   
+		{
+	     	findClone(head+tail, i1, i2, i3, i4, i5, i6);
+	     	fail;
+	     }   
+	     default:
+	     	println("End");
+   	}
+}						 
+						  
+public void findClone(list[str] In,  str S1, str S2, str S3, str S4, str S5, str S6)
+{
+	switch(In)
+	{
+	    case [*str head, str i1, str i2, str i3, str i4, str i5, str i6, *str tail]:   
+		{
+	     	if(S1 == i1 && S2 == i2 && S3 == i3 && S4 == i4 && S5 == i5 && S6 == i6)
+	     	{
+	     		println("found duplicate\n\t<i1>\n\t<i2>\n\t<i3>\n\t<i4>\n\t<i5>\n\t<i6>");
+	     	}
+	     	fail;
+	     }   
+	     default:
+	     	return;
+   	}
+}

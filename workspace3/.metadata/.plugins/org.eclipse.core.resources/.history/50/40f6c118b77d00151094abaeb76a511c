@@ -1,0 +1,56 @@
+module trees
+
+// definition of a new tree (information at the leaves, two types of node)
+data ColoredTree = leaf(int N)      
+                 | red(ColoredTree left, ColoredTree right) 
+                 | black(ColoredTree left, ColoredTree right);
+
+// Counting red nodes: use visit and pattern match on red nodes                 
+public int cntRed(ColoredTree t){
+   int c = 0;
+   visit(t) {
+     case red(_,_): c = c + 1;      
+   };
+   return c;
+}
+
+// Calculate the sum of the information at the leaves
+public int addLeaves(ColoredTree t){
+   int c = 0;
+   visit(t) 
+   {
+     case leaf(int N): c = c + N;   
+   };
+   return c;
+}
+
+// Replacing nodes 
+// return the result of the visit
+public ColoredTree makeBlack(ColoredTree t){
+   return visit(t) 
+   {
+     case red(l, r) => black(l, r)   
+   };
+}
+
+// What's interesting is that we can treat a lot of stuff like a tree
+
+data Suite = hearts() | diamonds() | clubs() | spades();
+
+data Card =  two(Suite s) | three(Suite s) | four(Suite s) | five(Suite s) |
+             six(Suite s) | seven(Suite s) | eight(Suite s) | nine(Suite s) | ten(Suite s) |
+             jack(Suite s) | queen(Suite s) | king(Suite s) | ace(Suite s);
+             
+data Hand = hand(list[Card] cards);
+
+public Hand H = hand([two(hearts()), jack(diamonds()), six(hearts()), ace(spades())]);
+
+public map[str,int] count(node N){      
+  freq = ();                            
+  visit(N){                             
+    case node M: { name = getName(M);   
+                   freq[name] ? 0 += 1; 
+                 }
+  }
+  return freq;
+}

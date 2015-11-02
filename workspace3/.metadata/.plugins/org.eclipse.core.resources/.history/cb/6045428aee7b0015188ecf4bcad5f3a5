@@ -1,0 +1,68 @@
+module BubbleSort
+import List;
+import IO;
+
+public list[int] sort1(list[int] numbers){
+  if(size(numbers) > 0){
+     for(int i <- [0 .. size(numbers)-1]){
+       if(numbers[i] > numbers[i+1]){
+         <numbers[i], numbers[i+1]> = <numbers[i+1], numbers[i]>;		// Funny, assigning multiple elements in array
+         return sort1(numbers);
+       }
+    }
+  }  
+  return numbers;
+}
+
+// any <- very haskellish
+bool isSorted(list[int] lst) = !any(int i <- index(lst), int j <- index(lst), (i < j) && (lst[i] > lst[j]));
+
+// Execute this by issuing ':test' NO SEMICOLON!
+test bool sorted1a() = isSorted([]);
+test bool sorted1b() = isSorted([10]);
+test bool sorted1c() = isSorted([10, 20]);
+test bool sorted1d() = isSorted([-10, 20, 30]);
+test bool sorted1e() = !isSorted([10, 20, -30]);
+
+// We pattern match on [Int], Int, Int, [Int] and check if the two should be swapped.
+// What will this do in pactice if we give it a list?
+public list[int] sort2(list[int] numbers){
+  switch(numbers){
+    case [*int nums1, int p, int q, *int nums2]:
+       if(p > q){
+          return sort2(nums1 + [q, p] + nums2);
+       } else {
+       	  fail;	// [???] What does this one do? Does it now somehow 'know' not to give lists like this?
+       }
+     default: return numbers;
+   }
+}
+
+public void testPatternMatch(list[int] numbers)
+{
+	switch(numbers){
+    case [*int nums1, int p, int q, *int nums2]:   
+    if(size(nums1) == 3)
+    {    
+          println(nums1);
+          println(p);
+          println(q);
+          println(nums2);
+          println("");    
+     }
+     else
+     {
+     	println("This fails");
+     	 println(nums1);
+          println(p);
+          println(q);
+          println(nums2);
+          println("");    
+     	fail;
+     }   
+     default:
+     	println("");
+   }
+}
+
+test bool sorted2(list[int] lst) = isSorted(sort2(lst));

@@ -1,0 +1,30 @@
+module CallStack
+
+import Set;
+import Relation;
+import analysis::graphs::Graph;
+
+alias Proc = str;
+
+public rel[Proc, Proc] Calls = {<"a", "b">, <"b", "c">, <"b", "d">, <"d", "c">, 
+                       <"d", "e">, <"f", "e">, <"f", "g">, <"g", "e">};
+
+// number of calls
+public int nrOfCalls = size(Calls);
+
+// number of procedures
+public int nrOfProcedures = size(carrier(Calls));
+
+// callers
+public set[Proc] callers = domain(Calls);
+// callees 
+public set[Proc] callees = range(Calls);
+
+// Entry points (functions that call other functions but are not calles themselves
+public set[Proc] entryPoints = top(Calls);
+// Leaves (functions which are called, but do not call anything themselves
+public set[Proc] leaves = bottom(Calls);
+
+// All direct and indirect calls
+// This is of course the transitive closure of the relation, which can be done very gracefully
+public rel[Proc,Proc] tc = Calls+;

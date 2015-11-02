@@ -1,0 +1,33 @@
+module LineCount
+
+import IO;
+
+public list[str] sampleCount = 	["int main()",
+								"{",
+								"	// this is a comment",
+								" 	/* and here is", 
+								" 	a multi-line comment */",
+								" 	/* but the following */ int isAn = Expression;",
+								"}"];
+
+public int LinesOfCode(list[str] lines)
+{
+	nrOfLines = 0;
+	
+	// when ignore
+	// [whitespace]//[anything]
+	// [ws]
+	
+	//lines = readFileLines(file);
+	
+	for(line <- lines)
+	{
+		//if(/<match:\s\\\\.*>/ := line)
+		if(/<match:.*>/ := line)
+		{
+			println(match);
+			nrOfLines = nrOfLines + 1;
+		}
+	}
+	return nrOfLines;
+}

@@ -1,0 +1,33 @@
+module RacalQuestions
+
+// Is there a wy to only print the type of some expression (like :t in Haskell) wihtout also printing the value?
+
+// The following two algorithms appear to be almost ientical, yet their behavior (especially runtime) is drastically different, why?
+
+// This one will give the correct location of the clone in the input list
+public void findSubList(list[str] In, list[str] whatWeSearchFor)
+{
+    for ([*str head, *whatWeSearchFor, *str _] := In)
+        println("gotcha at <size(head)>");
+} 
+
+// This one will not give the correct location of the clone in the input list, but it is a hell of a lot faster (approx 250 times) and it
+// does appear to give the correct number of duplicates, so it does iterate the whole list.
+// If we print head, we see that it contains the first string in the input list. Therefore the reported location of the clone will always be 
+// be length of that string
+public void findSubList2(list[str] In, list[str] whatWeSearchFor)
+{
+    for ([*head, *whatWeSearchFor, *_] := In)
+        println("gotcha at <size(head)>");
+} 
+
+
+// To execute:
+public list[str] makeStringList(int Start, int End)
+{
+	return [ "some string with number <i>" | i <- [Start..End]];
+}
+
+public list[str] toTest = makeStringList(0, 100000) + makeStringList(0,10) + makeStringList(100000, 200000) + makeStringList(0,10); 	
+
+// findSubList(toTest, makeStringList(0,7));

@@ -1,0 +1,21 @@
+module CallStack
+
+import Set;
+import Relation;
+import analysis::graphs::Graph;
+
+alias Proc = str;
+
+public rel[Proc, Proc] Calls = {<"a", "b">, <"b", "c">, <"b", "d">, <"d", "c">, 
+                       <"d", "e">, <"f", "e">, <"f", "g">, <"g", "e">};
+
+// number of calls
+public int nrOfCalls = size(Calls);
+
+// number of procedures
+public int nrOfProcedures = size(carrier(Calls));
+
+// callers
+public set[Proc] callers = domain(Calls);
+// callees 
+public set[Proc] callees = range(Calls);

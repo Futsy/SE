@@ -1,0 +1,18 @@
+module RascalNotes
+
+import IO;
+
+public void fizzbuzz2() 
+{
+  for (n <- [1..101])   
+switch(<n % 3 == 0, n % 5 == 0>) 
+{
+  case <true,true>  : println("FizzBuzz");
+  case <true,false> : println("Fizz");
+  case <false,true> : println("Buzz");
+  default: println(n);
+}
+}
+
+
+

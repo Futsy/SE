@@ -1,0 +1,24 @@
+module lists
+
+// We can do some list stuff in Raskell, but it seems like we can't really do the fun stuff we could in
+// haskell
+
+import IO;
+
+// We can do the basic stuff. Note that this means up to, not including 5 in Raskell!
+public void printList()
+{
+	println([1..5]);
+}
+
+// And a list of evens up to and incluing 10...
+public void printList2()
+{
+	println([2,4..11]);
+}
+
+// But this endless list will not work
+//public void printList3()
+//{
+//	println([2,4..]);
+//}

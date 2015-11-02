@@ -1,0 +1,11 @@
+module pointersCodeAnalyses
+
+import lang::java::m3::Core;
+import lang::java::jdt::m3::Core;
+
+// Rascal has a lot of nice features for code inspection 
+// Int handy to unserstand the basics of it. First, it works a lot with URI's. If we analyze some code:
+
+public M3 tree = createM3FromEclipseProject(|project://HelloWorld|);
+
+
