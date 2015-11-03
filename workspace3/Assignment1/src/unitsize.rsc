@@ -14,7 +14,7 @@ import volume;
 
 // Get all the Java methods
 public list[loc] AllMethods(M3 model) 
-	= [method | method <- model@containment.from, method.scheme == "java+method"];
+	= [method | method <- methods(model@containment)];
 
 // Get the total source lines of code in the project
 // \todo: Could probably avoid a big copy here by sending comments 
