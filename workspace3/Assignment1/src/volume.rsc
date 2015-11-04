@@ -23,5 +23,5 @@ public tuple[loc, int] LinesOfCodeInPart(loc part, list[str] comments)
 	= <part, size(ListOfCodeLines(part, comments))>;	
 
 // Function that creates a list of all SLOC in the part
-public list[str] ListOfCodeLines(loc part, list[str] comments) //\todo: real men never double trim
-	= [line | line <- readFileLines(part), trim(line) notin comments && !isEmpty(trim(line))];
+public list[int] ListOfCodeLines(loc part, list[str] comments) //\todo: real men never double trim
+	= [1 | line <- readFileLines(part), trim(line) notin comments && !isEmpty(trim(line))];
