@@ -18,8 +18,8 @@ public lrel[str methodName, int complexity, int methodSloc] CalculateComplexity(
 	
 	//\todo: I strongly dislike the sum here
 	
-    // Basically we iterate this AST
-    visit (tree) {
+	// Basically we iterate this AST
+	visit (tree) {
 	case method(_, str name, _, list[Expression] exceptions, Statement impl):
 		returnList += <
 			name, 
@@ -34,7 +34,7 @@ public lrel[str methodName, int complexity, int methodSloc] CalculateComplexity(
 		>;
 	}
 
-    return returnList;
+	return returnList;
 }
 
 
