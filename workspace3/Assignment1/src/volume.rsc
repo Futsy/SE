@@ -22,6 +22,6 @@ public rel[loc, int] LinesOfCode(set[loc] parts, list[str] comments)
 public tuple[loc, int] LinesOfCodeInPart(loc part, list[str] comments)
 	= <part, size(ListOfCodeLines(part, comments))>;	
 
-// Function that creates a list of all SLOC in the part
+// Function that creates a list the sisze of all the SLOC in the part
 public list[int] ListOfCodeLines(loc part, list[str] comments) //\todo: real men never double trim
 	= [1 | line <- readFileLines(part), trim(line) notin comments && !isEmpty(trim(line))];
