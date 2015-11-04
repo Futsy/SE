@@ -14,11 +14,14 @@ public list[str] AllComments(M3 model)
 	= [trim(comment) | comment <- [*readFileLines(line) | line <- 
 	[doc.comments | doc <- model@documentation]]];
 
-// Get the total source lines of code in the project
-public list[int] LinesOfCode(set[loc] parts, list[str] comments) 
-	= [LinesOfCodeInPart(part, comments) | part <- parts];
+// Get the name and total source lines of code in the parts
+public rel[loc, int] LinesOfCode(set[loc] parts, list[str] comments) 
+	= {LinesOfCodeInPart(part, comments) | part <- parts};
 
-// Get the amount of source lines of code in a file
-public int LinesOfCodeInPart(loc part, list[str] comments)
-	= size([line | line <- readFileLines(part), 
-	trim(line) notin comments && !isEmpty(trim(line))]);	//\todo: real men never double trim
+// Get the name and the amount of source lines of code as a tuple
+public tuple[loc, int] LinesOfCodeInPart(loc part, list[str] comments)
+	= <part, size(ListOfCodeLines(part, comments))>;	
+
+// Function that creates a list of all SLOC in the part
+public list[str] ListOfCodeLines(loc part, list[str] comments) //\todo: real men never double trim
+	= [line | line <- readFileLines(part), trim(line) notin comments && !isEmpty(trim(line))];

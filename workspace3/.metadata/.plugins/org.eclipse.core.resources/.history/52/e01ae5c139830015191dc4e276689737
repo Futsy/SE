@@ -22,7 +22,6 @@ public loc largeProject = |project://hsqldb-2.3.1|;
  */
 public void AnalyseProject(loc project) 
 {
-	//http://portal.ou.nl/documents/114964/2986739/T66311_02.pdf
 	println("Starting analysis");
 	
 	// Create the model
@@ -47,6 +46,7 @@ public void AnalyseProject(loc project)
 	// Pick a random number and call that point a dupe in a random file 
 	// (nobody will notice in some cases)
 	
+		
 }
 
 

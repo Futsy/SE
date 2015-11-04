@@ -12,11 +12,9 @@ import String;
 
 import volume;
 
-public lrel[str methodName, int complexity, int methodSloc] CalculateComplexity(set[Declaration] tree, list[str] comments)
+public lrel[str, int, int] CalculateComplexity(set[Declaration] tree, list[str] comments)
 {
 	returnList = [];
-	
-	//\todo: I strongly dislike the sum here
 	
     // Basically we iterate this AST
     visit (tree) {
