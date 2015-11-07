@@ -12,7 +12,7 @@ import String;
 
 import volume;
 
-public lrel[str methodName, int complexity, int methodSloc] CalculateComplexity(set[Declaration] tree, list[str] comments)
+public lrel[str methodName, int complexity, int methodSloc] CalculateComplexity(set[Declaration] tree)
 {
 	returnList = [];
 	
@@ -24,13 +24,13 @@ public lrel[str methodName, int complexity, int methodSloc] CalculateComplexity(
 		returnList += <
 			name, 
 			Complexity(impl) + sum([0] + [Complexity(except) | except <- exceptions]),
-			sum([line[1] | line <- LinesOfCode({impl@src}, comments)])
+			size(LinesOfCode({impl@src}))
 		>;
 	case constructor(str name, _, list[Expression] exceptions, Statement impl): 
 		returnList += <
 			name, 
 			Complexity(impl) + sum([0] + [Complexity(except) | except <- exceptions]),
-			sum([line[1] | line <- LinesOfCode({impl@src}, comments)])
+			size(LinesOfCode({impl@src}))
 		>;
 	}
 
