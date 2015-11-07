@@ -48,7 +48,7 @@ public int Complexity(Statement statement)
 	case \if(_, _):			complexity += 1;
 	case \if(_, _, _):		complexity += 1;
 	case \for(_, _, _):		complexity += 1;
-	case \for(_, _, _, _):	complexity += 1;
+	case \for(_, _, _, _):		complexity += 1;
 	case \do(_, _):			complexity += 1; // Not sure if this creates a branch
 	case \while(_, _):		complexity += 1;
 	case \try(_, _):		complexity += 1; //\todo: Not sure about these two
