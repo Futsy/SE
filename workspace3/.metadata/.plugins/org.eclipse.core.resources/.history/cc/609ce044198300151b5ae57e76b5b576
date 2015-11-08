@@ -1,0 +1,15 @@
+package testPackage;
+
+public class MyTestClass {
+	public int SomeMethod(int arg)
+	{
+
+		return 6;
+	}
+	
+	@Override
+	public void someOverride()
+	{
+		
+	}
+}

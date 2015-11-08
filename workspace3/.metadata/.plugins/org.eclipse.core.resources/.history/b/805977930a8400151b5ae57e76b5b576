@@ -1,0 +1,27 @@
+package testproject;
+
+public class testFileOne {
+
+public testFileOne() {}
+
+public void Foo() {
+int a;
+int b;
+int c;
+int d;
+int e;
+int f;
+int g;
+}
+
+public void Bar() {
+int b;
+int c;
+int d;
+int e;
+int f;
+int g;
+int h;
+}
+
+}

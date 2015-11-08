@@ -1,0 +1,10 @@
+module unitTestCloneDetection
+
+import clones;
+import List;
+
+test bool tcIgnoreComments()
+{
+	lines = readFileLines(|java+compilationUnit:///Users/Bouke/Documents/SE/workspace3/MyTestJava/src/testCloneDetection/A.java|);
+	return size(getDuplicateLines(lines)) == 16;
+}

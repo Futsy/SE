@@ -1,0 +1,52 @@
+package testPackage;
+
+public class MyTestClass {
+
+public testFileOne() {}
+
+public void Foo() {
+int a;
+int b; /* some multi line comments */
+int c;
+/* cmt */int d;
+int e;
+/* 
+ * in 
+ * this 
+ * code
+ */
+int f;
+int g;
+}
+
+public void Bar() {
+int b;
+int c;
+int d;
+// let's 
+// put
+//some
+int e;
+int f;
+//sinle
+int g;
+//line
+int h;
+//comments
+//here
+}
+
+public void myFunc()
+{
+a = a+1;
+/* ff wat zooi*/
+}
+
+/* this function is so awesome, i need to write it twice
+myFunc2()
+{
+a1 = a+1;
+}
+*/
+
+}

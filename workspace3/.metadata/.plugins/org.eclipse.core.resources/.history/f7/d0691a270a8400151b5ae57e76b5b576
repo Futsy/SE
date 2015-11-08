@@ -1,0 +1,21 @@
+package testPackage;
+
+public class MyTestClass {
+	public int SomeMethod(int arg)
+	{
+		// single line comment
+		expr(); // single line comment after expression
+		/*
+		 * multi line
+		 */
+		/* multi line*/ with(Expression); /*in between */
+
+		return 6;
+	}
+	
+	@Override
+	public void someOverride()
+	{
+		
+	}
+}

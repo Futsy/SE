@@ -1,0 +1,23 @@
+package testPackage;
+
+public class MyTestClass {
+	public int SomeMethod(int arg)
+	{
+		// single line comment
+		/* multi
+		 * line 
+		 * comment
+		 */
+		/* non-standard
+		 multi line comment
+		 */
+		/* comment */  
+		return 6;
+	}
+	
+	@Override
+	public void someOverride()
+	{
+		
+	}
+}

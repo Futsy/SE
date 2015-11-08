@@ -1,0 +1,19 @@
+module unitTestCloneDetection
+
+import clones;
+import List;
+import IO;
+import Set;
+import volume;
+
+test bool tcIgnoreComments()
+{
+	lines = readFileLines(|java+compilationUnit:///Users/Bouke/Documents/SE/workspace3/MyTestJava/src/testCloneDetection/A.java|);
+	return size(getDuplicateLines(lines)) == 16;
+}
+
+int IgnoreComments()
+{
+	lines = GetProjectLines(createM3FromEclipseFile(|java+compilationUnit:///Users/Bouke/Documents/SE/workspace3/MyTestJava/src/testCloneDetection/A.java|));
+	return size(getDuplicateLines(lines));
+}

@@ -1,6 +1,0 @@
-module lists
-
-// We can do some list stuff in Raskell, but it seems like we can't really do the fun stuff we could in
-// haskell
-
-list1 = [1..5]
