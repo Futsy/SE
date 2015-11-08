@@ -9,6 +9,10 @@ import IO;
 import List;
 import util::Math;
 
+// Cool graphic things
+import vis::Figure;
+import vis::Render;
+
 // Functions outside this file for analysis
 import volume;
 import complexity;
@@ -24,27 +28,63 @@ public loc largeProject = |project://hsqldb-2.3.1|;
  */
 public void AnalyseProject(loc project) 
 {
-	//http://portal.ou.nl/documents/114964/2986739/T66311_02.pdf
+	println("-- Creation ----------------");
 	
 	// Create the model
 	model = createM3FromEclipseProject(project);
+	println(" - Created model");
 	
 	// To compute volume we take all that code and count everything 
 	// except for empty lines and comments
-	// Total amount of SLOC = sum of The amount of source lines per file
 	sloc = LinesOfCode(files(model));
+	println(" - Calculated Lines of code <size(sloc)>");
+	
+	ast = createAstsFromEclipseProject(project, true);
+	println(" - Created AST");
 	
 	// So now we get the complexity and sloc per method
-	ast = createAstsFromEclipseProject(project, true);
 	complexity = CalculateComplexity(ast);
+	println(" - Calculated complexity");
 
 	// Duplication
-	// Pick a random number and call that point a dupe in a random file 
-	// (nobody will notice in some cases)
 	duplications = CalculateDuplication(sloc, model);
+	println(" - Calculated duplication <duplications>\n\n");
 	
-	// Print all the results
+	// Show all the results
 	Report(size(sloc), complexity, duplications);
+	//DrawTree(size(sloc), complexity, duplications);
+}
+
+/**
+ * Draw the results as tree
+ */
+public void DrawTree(int sloc, lrel[str, int, int] complexity, int duplications)
+{
+	volumeClass      = ReportVolume(sloc);
+	unitSizeClass    = ReportUnitSize(complexity);
+	complexityClass  = ReportComplexity(sloc, complexity);
+	duplicationClass = ReportDuplications(sloc, duplications);
+
+	// Calculate SIG Model
+	analysability = round(toReal(volumeClass + duplicationClass + unitSizeClass) / 3);
+	changeability = round(toReal(complexityClass + duplicationClass) / 2);
+	stability     = -1;
+	testability   = round(toReal(complexityClass + unitSizeClass) / 2);
+
+	render(tree(box(text("Maintainability <ClassToStr((analysability + changeability + testability) / 3)>"), 
+		fillColor("white")), [ 
+			tree(box(text("analysability <ClassToStr(analysability)>"), fillColor("grey")),
+				[box(text("volume <ClassToStr(volumeClass)>"), fillColor("white")),
+				 box(text("duplication <ClassToStr(duplicationClass)>"), fillColor("white")),
+				 box(text("unit size <ClassToStr(unitSizeClass)>"), fillColor("white"))]),
+			tree(box(text("changeability <ClassToStr(changeability)>"), fillColor("grey")),
+				[box(text("complexity <ClassToStr(complexityClass)>"), fillColor("white")),
+				 box(text("duplication <ClassToStr(duplicationClass)>"), fillColor("white"))]),
+			box(text("stability <ClassToStr(stability)>"), fillColor("grey")),
+			tree(box(text("testability <ClassToStr(testability)>"), fillColor("grey")),
+				[box(text("complexity <ClassToStr(complexityClass)>"), fillColor("white")),
+				 box(text("unit size <ClassToStr(unitSizeClass)>"), fillColor("white"))])
+	],std(size(50)), std(gap(20)), manhattan(false)));
 }
 
 /**
@@ -61,10 +101,10 @@ public void Report(int sloc, lrel[str, int, int] complexity, int duplications)
 	duplicationClass = ReportDuplications(sloc, duplications);
 	
 	// Calculate SIG Model
-	analysability = (volumeClass + duplicationClass + unitSizeClass) / 3;
-	changeability = (complexityClass + duplicationClass) / 2;
+	analysability = round(toReal(volumeClass + duplicationClass + unitSizeClass) / 3);
+	changeability = round(toReal(complexityClass + duplicationClass) / 2);
 	stability     = -1;
-	testability   = (complexityClass + unitSizeClass) / 2;
+	testability   = round(toReal(complexityClass + unitSizeClass) / 2);
 	
 	println("Maintainability");
 	ReportMaintainability(analysability, changeability, stability, testability);
@@ -114,13 +154,13 @@ public int ReportUnitSize(lrel[str, int, int] complexity)
  	for (tuple[str name, int complexity, int methodSloc] meth <- complexity) {
  		slocMethods += meth.methodSloc;
  		
- 		if (meth.methodSloc > 50) {
+ 		if (meth.methodSloc > 100) {
  			slocVeryHigh += meth.methodSloc;
  		}
- 		else if (meth.methodSloc > 20) {
+ 		else if (meth.methodSloc > 50) {
  			slocHigh += meth.methodSloc;
  		}
- 		else if (meth.methodSloc > 10) {
+ 		else if (meth.methodSloc > 20) {
  			slocModerate += meth.methodSloc;
  		}
  	}
