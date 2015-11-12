@@ -39,7 +39,7 @@ public void AnalyseProject(loc project)
 	sloc = LinesOfCode(files(model));
 	println(" - Calculated Lines of code <size(sloc)>");
 	
-	ast = createAstsFromEclipseProject(project, true);
+	ast = { createAstFromFile(f, false) | f <- files(model)};
 	println(" - Created AST");
 	
 	// So now we get the complexity and sloc per method
@@ -47,7 +47,7 @@ public void AnalyseProject(loc project)
 	println(" - Calculated complexity");
 
 	// Duplication
-	duplications = CalculateDuplication(sloc, model);
+	duplications = CalculateDuplication(sloc);
 	println(" - Calculated duplication <duplications>\n\n");
 	
 	// Show all the results
