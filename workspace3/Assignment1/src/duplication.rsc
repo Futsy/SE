@@ -12,25 +12,34 @@ import String;
 
 import volume;
 
-public int CalculateDuplication(list[str] l)
+public int CalculateDuplication(map[loc, list[str]] l)
 {
-	// Insert line numbers
-	lrel[int, str] lines = [<I, l[I]> | I <- [0..size(l)]];
+	// We get a map of file to the lines in that file. 
+	// In order to be able to uniquely define lines later on, we need the combination
+	// <loc,line number>
+	// Therefore we change from map[loc list[str]] to map[loc list[<loc, linenumber, lineContent>]
+	map[loc, lrel[loc, int, str]] lines = (k:[<k, I, l[k][I]> | I <- [0..size(l[k])]] | k <- l);
 	
-	// A group of 6 lines that appears (without alterations) in more than one place is a duplicate
-	allBlocksOf6 = [take(6, lines[block..]) | block <- [0..size(lines) - 6]];
+	// Now we create a list of blocks of 6 subsequent lines in all files. 
+	// As a group of 6 lines that appears (without alterations) in more than one place is a duplicate
+	allBlocksOf6 = [*[take(6, lines[k][block..]) | block <- [0..size(lines[k]) - 6]] | k <- lines];
 	
-	set[lrel[int line, str content]] duplicates = getDuplicates(allBlocksOf6);
-	return size({ *dupe.line | dupe <- duplicates });  
+	// Use the getDuplicates function to get all 6 line blocks which occur multiple times in the input
+	// we only check the str part of the lines in the blocks.
+	set[lrel[loc file, int line, str content]] duplicates = getDuplicates(allBlocksOf6);	
+	
+	// We now have a list of duplicate blocks. We flatten it to make a set of <file, line number> tuples
+	// to get all unique duplicate lines
+	return size({ *[ <f, li> | <f,li,_> <- block] | block <- duplicates });
 }
 
 // filter a list of lrel[int, str] and return only the elements
 // of which the str part occurs multiple times in the list
-set[lrel[int, str]] getDuplicates(list[lrel[int l, str c]] l)
+set[lrel[loc, int, str]] getDuplicates(list[lrel[loc f, int l, str c]] l)
 {
 	if(isEmpty(l)) return [];
 	
-	set[lrel[int, str]] duplicates = {};
+	set[lrel[loc, int, str]] duplicates = {};
 	
 	for(I <- [0..size(l)-1])
 	{

@@ -9,16 +9,24 @@ import IO;
 import List;
 import String;
 
-// Get the name and total source lines of code in the parts
-public lrel[loc,str] LinesOfCode(set[loc] parts) 
+// Get thetotal source lines of code in the parts
+public list[str] LinesOfCode(set[loc] parts)
 {
-	lrel[loc,str] lines = [];
+	// Get the lines per file and splice all lines to a single list
+	locToSloc = LinesOfCodePerFile(parts);
+	return [*locToSloc[f] | f <- locToSloc];
+} 
+
+public map[loc,list[str]] LinesOfCodePerFile(set[loc] parts) 
+{
+	map[loc, list[str]] fileToLines = ();
 	
 	for (part <- parts) {
+		list[str] lines = [];
 		linesInFile = [];
-		for (line <- readFileLines(part)) {
+		for (line <- readFileLines(part)) {	
 			// Remove all string literal content
-			line = RemoveQuotes(line);
+			line = RemoveQuotes(line);			
 			
 			// Remove all the single line comments
 			takeItFrom = findFirst(line, "//");
@@ -63,25 +71,24 @@ public lrel[loc,str] LinesOfCode(set[loc] parts)
 					// start on this line
 					started = true;
 					if (!isEmpty(trim(actualLine[..startPoint])))
-						lines += <part, trim(actualLine[..startPoint])>;
+						lines += trim(actualLine[..startPoint]);
 					break;
 				}
 				else {
 					if (!isEmpty(actualLine))
-						lines += <part, trim(actualLine)>;
+						lines += trim(actualLine);
 					break;
 				}
 			}
 		}
-		
+		fileToLines[part] = lines;
 	}
-	return lines;
+	return fileToLines;
 }
-
 
 public str RemoveQuotes(str line)
 {
 	return visit(line) {
-		case /\"([^\"\\]|\\.)*\"/ => "\"\""
+		case /<s:\"([^\"\\]|\\.)*\">/ => replaceAll(replaceAll(replaceAll(s, "/*", "~`"), "*/", "±§"), "//", "`§")
 	}
 }

@@ -16,8 +16,9 @@ import volume;
 test bool testNoDuplication()
 {
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationNone|);
-	l = LinesOfCode(files(model));
-	result =  toReal(CalculateDuplication(l)) / toReal(size(l)) * 100.0;
+	l = LinesOfCodePerFile(files(model));
+	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
+	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
 	//println(result);
 	return result == 0.0;
 }
@@ -25,8 +26,9 @@ test bool testNoDuplication()
 test bool testSingleDuplication()
 {
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationSameClass6lines|);
-	l = LinesOfCode(files(model));
-	result =  toReal(CalculateDuplication(l)) / toReal(size(l)) * 100.0;
+	l = LinesOfCodePerFile(files(model));
+	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
+	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
 	//println(result);
 	return result == (2.0 / 3.0) * 100.0;
 }
@@ -34,8 +36,9 @@ test bool testSingleDuplication()
 test bool testSingleLargerDuplication()
 {
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationSameClass10lines|);
-	l = LinesOfCode(files(model));
-	result =  toReal(CalculateDuplication(l)) / toReal(size(l)) * 100.0;
+	l = LinesOfCodePerFile(files(model));
+	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
+	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
 	//println(result);
 	return result == (20.0 / 26.0) * 100.0;
 }
@@ -43,8 +46,11 @@ test bool testSingleLargerDuplication()
 test bool testMultiDuplication()
 {
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationMultiClass|);
-	l = LinesOfCode(files(model));
-	result =  toReal(CalculateDuplication(l)) / toReal(size(l)) * 100.0;
-	//println(result);
+	l = LinesOfCodePerFile(files(model));
+	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
+	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
+	println(linesInAllFiles);
+	println(CalculateDuplication(l));
+	println(result);
 	return result == (3*10.0) / (25.0 + 39.0 + 51.0) * 100.0;
 }

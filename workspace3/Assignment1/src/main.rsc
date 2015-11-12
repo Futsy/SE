@@ -16,7 +16,7 @@ import vis::Render;
 // Functions outside this file for analysis
 import volume;
 import complexity;
-import alt::duplication;
+import duplication;
 
 // locations of projects for convenience (could just enter a path)
 public loc testProject  = |project://testproject|;
@@ -36,8 +36,9 @@ public void AnalyseProject(loc project)
 	
 	// To compute volume we take all that code and count everything 
 	// except for empty lines and comments
-	lrel[loc file, str lines] sloc = LinesOfCode(files(model));
-	println(" - Calculated Lines of code <size(sloc.lines)>");
+	locToSloc = LinesOfCodePerFile(files(model));
+	sloc = [*locToSloc[f] | f <- locToSloc];
+	println(" - Calculated Lines of code <size(sloc)>");
 	
 	ast = { createAstFromFile(f, false) | f <- files(model)};
 	println(" - Created AST");
@@ -47,7 +48,7 @@ public void AnalyseProject(loc project)
 	println(" - Calculated complexity");
 
 	// Duplication
-	duplications = CalculateDuplication(sloc.lines);
+	duplications = CalculateDuplication(locToSloc);
 	println(" - Calculated duplication <duplications>\n\n");
 	
 	// Show all the results
