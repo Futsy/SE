@@ -10,9 +10,10 @@ import List;
 import String;
 
 // Get the name and total source lines of code in the parts
-public list[str] LinesOfCode(set[loc] parts) 
+public lrel[loc,str] LinesOfCode(set[loc] parts) 
 {
-	list[str] lines = [];
+	lrel[loc,str] lines = [];
+	
 	for (part <- parts) {
 		linesInFile = [];
 		for (line <- readFileLines(part)) {	
@@ -59,16 +60,17 @@ public list[str] LinesOfCode(set[loc] parts)
 					// start on this line
 					started = true;
 					if (!isEmpty(trim(actualLine[..startPoint])))
-						lines += trim(actualLine[..startPoint]);
+						lines += <part, trim(actualLine[..startPoint])>;
 					break;
 				}
 				else {
 					if (!isEmpty(actualLine))
-						lines += trim(actualLine);
+						lines += <part, trim(actualLine)>;
 					break;
 				}
 			}
 		}
+		
 	}
 	return lines;
 }
