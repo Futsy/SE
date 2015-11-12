@@ -16,7 +16,10 @@ public lrel[loc,str] LinesOfCode(set[loc] parts)
 	
 	for (part <- parts) {
 		linesInFile = [];
-		for (line <- readFileLines(part)) {	
+		for (line <- readFileLines(part)) {
+			// Remove all string literal content
+			line = RemoveQuotes(line);
+			
 			// Remove all the single line comments
 			takeItFrom = findFirst(line, "//");
 			if (takeItFrom == -1) {
@@ -73,4 +76,12 @@ public lrel[loc,str] LinesOfCode(set[loc] parts)
 		
 	}
 	return lines;
+}
+
+
+public str RemoveQuotes(str line)
+{
+	return visit(line) {
+		case /\"([^\"\\]|\\.)*\"/ => "\"\""
+	}
 }
