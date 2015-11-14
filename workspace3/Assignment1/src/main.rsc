@@ -48,18 +48,18 @@ public void AnalyseProject(loc project)
 	println(" - Calculated complexity");
 
 	// Duplication
-	duplications = CalculateDuplication(locToSloc);
+	duplications = 10;//CalculateDuplication(locToSloc);
 	println(" - Calculated duplication <duplications>\n\n");
 	
 	// Show all the results
-	Report(size(sloc), complexity, duplications);
-	//DrawTree(size(sloc), complexity, duplications);
+	//Report(size(sloc), complexity, duplications);
+	DrawTree(size(sloc), complexity, duplications);
 }
 
 /**
  * Draw the results as tree
  */
-public void DrawTree(int sloc, lrel[str, int, int] complexity, int duplications)
+public void DrawTree(int sloc, lrel[int, int] complexity, int duplications)
 {
 	volumeClass      = ReportVolume(sloc);
 	unitSizeClass    = ReportUnitSize(complexity);
@@ -91,7 +91,7 @@ public void DrawTree(int sloc, lrel[str, int, int] complexity, int duplications)
 /**
  * Method that outputs all the metrics which are required by the assignment
  */
-public void Report(int sloc, lrel[str, int, int] complexity, int duplications) 
+public void Report(int sloc, lrel[int, int] complexity, int duplications) 
 {
 	println("-- Report ------------------");
 	
@@ -141,7 +141,7 @@ public void Report(int sloc, lrel[str, int, int] complexity, int duplications)
  * Method that prints the Complexity per unit
  \todo: refactor this redundant crap
  */
-public int ReportUnitSize(lrel[str, int, int] complexity)
+public int ReportUnitSize(lrel[int, int] complexity)
 {
 	if (size(complexity) == 0)
 		throw "Empty list";
@@ -152,7 +152,7 @@ public int ReportUnitSize(lrel[str, int, int] complexity)
  	slocMethods  = 0;
  	
  	// Calculate the complexity
- 	for (tuple[str name, int complexity, int methodSloc] meth <- complexity) {
+ 	for (tuple[int complexity, int methodSloc] meth <- complexity) {
  		slocMethods += meth.methodSloc;
  		
  		if (meth.methodSloc > 100) {
@@ -201,7 +201,7 @@ public int ReportUnitSize(lrel[str, int, int] complexity)
  * Method that prints the Complexity per unit
  \todo: refactor this redundant crap
  */
- public int ReportComplexity(int sloc, lrel[str, int, int] complexity)
+ public int ReportComplexity(int sloc, lrel[int, int] complexity)
  {
  	if (sloc <= 0)
 		throw "\<=0 as input";
@@ -214,7 +214,7 @@ public int ReportUnitSize(lrel[str, int, int] complexity)
  	slocVeryHigh = 0;
  	
  	// Calculate the complexity
- 	for (tuple[str name, int complexity, int methodSloc] meth <- complexity) {
+ 	for (tuple[int complexity, int methodSloc] meth <- complexity) {
  		if (meth.complexity > 50) {
  			slocVeryHigh += meth.methodSloc;
  		}
