@@ -52,40 +52,7 @@ public void AnalyseProject(loc project)
 	println(" - Calculated duplication <duplications>\n\n");
 	
 	// Show all the results
-	//Report(size(sloc), complexity, duplications);
-	DrawTree(size(sloc), complexity, duplications);
-}
-
-/**
- * Draw the results as tree
- */
-public void DrawTree(int sloc, lrel[int, int] complexity, int duplications)
-{
-	volumeClass      = ReportVolume(sloc);
-	unitSizeClass    = ReportUnitSize(complexity);
-	complexityClass  = ReportComplexity(sloc, complexity);
-	duplicationClass = ReportDuplications(sloc, duplications);
-
-	// Calculate SIG Model
-	analysability = round(toReal(volumeClass + duplicationClass + unitSizeClass) / 3);
-	changeability = round(toReal(complexityClass + duplicationClass) / 2);
-	stability     = -1;
-	testability   = round(toReal(complexityClass + unitSizeClass) / 2);
-
-	render(tree(box(text("Maintainability <ClassToStr((analysability + changeability + testability) / 3)>"), 
-		fillColor("white")), [ 
-			tree(box(text("analysability <ClassToStr(analysability)>"), fillColor("grey")),
-				[box(text("volume <ClassToStr(volumeClass)>"), fillColor("white")),
-				 box(text("duplication <ClassToStr(duplicationClass)>"), fillColor("white")),
-				 box(text("unit size <ClassToStr(unitSizeClass)>"), fillColor("white"))]),
-			tree(box(text("changeability <ClassToStr(changeability)>"), fillColor("grey")),
-				[box(text("complexity <ClassToStr(complexityClass)>"), fillColor("white")),
-				 box(text("duplication <ClassToStr(duplicationClass)>"), fillColor("white"))]),
-			box(text("stability <ClassToStr(stability)>"), fillColor("grey")),
-			tree(box(text("testability <ClassToStr(testability)>"), fillColor("grey")),
-				[box(text("complexity <ClassToStr(complexityClass)>"), fillColor("white")),
-				 box(text("unit size <ClassToStr(unitSizeClass)>"), fillColor("white"))])
-	],std(size(50)), std(gap(20)), manhattan(false)));
+	Report(size(sloc), complexity, duplications);
 }
 
 /**
