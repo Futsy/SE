@@ -26,7 +26,7 @@ public loc largeProject = |project://hsqldb-2.3.1|;
 /**
  * Method that calculates all the metrices for a given project
  */
-public void AnalyseProject(loc project) 
+public void AnalyseProject(loc project, bool duplication) 
 {
 	println("-- Creation ----------------");
 	
@@ -48,8 +48,11 @@ public void AnalyseProject(loc project)
 	println(" - Calculated complexity");
 
 	// Duplication
-	duplications = 10;//CalculateDuplication(locToSloc);
-	println(" - Calculated duplication <duplications>\n\n");
+	duplications = -1;
+	if (duplication) {
+		duplications = CalculateDuplication(locToSloc);
+		println(" - Calculated duplication <duplications>\n\n");
+	}
 	
 	// Show all the results
 	Report(size(sloc), complexity, duplications);
@@ -66,13 +69,25 @@ public void Report(int sloc, lrel[int, int] complexity, int duplications)
 	volumeClass      = ReportVolume(sloc);
 	unitSizeClass    = ReportUnitSize(complexity);
 	complexityClass  = ReportComplexity(sloc, complexity);
-	duplicationClass = ReportDuplications(sloc, duplications);
 	
 	// Calculate SIG Model
-	analysability = round(toReal(volumeClass + duplicationClass + unitSizeClass) / 3);
-	changeability = round(toReal(complexityClass + duplicationClass) / 2);
-	stability     = -1;
-	testability   = round(toReal(complexityClass + unitSizeClass) / 2);
+	analysability = -1;
+	changeability = -1;
+	stability	  = -1;
+	testability   = -1;
+	
+	if (duplications != -1) {
+		duplicationClass = ReportDuplications(sloc, duplications);
+		
+		analysability = round(toReal(volumeClass + duplicationClass + unitSizeClass) / 3);
+		changeability = round(toReal(complexityClass + duplicationClass) / 2);
+		testability   = round(toReal(complexityClass + unitSizeClass) / 2);
+	}
+	else {
+		analysability = round(toReal(volumeClass + unitSizeClass) / 2);
+		changeability = complexityClass;
+		testability   = round(toReal(complexityClass + unitSizeClass) / 2);
+	}
 	
 	println("Maintainability");
 	ReportMaintainability(analysability, changeability, stability, testability);
