@@ -36,16 +36,11 @@ public list[str] RemoveSingleLineComments(loc part)
 		
 		// Remove all the single line comments
 		takeItFrom = findFirst(line, "//");
-		if (takeItFrom == -1) {
-			if (isEmpty(trim(line)))
-				continue;
-			linesInFile += trim(line);
-		}
-		else {
-			if (isEmpty(trim(line[..takeItFrom])))
-				continue;
-			linesInFile += line[..takeItFrom];
-		}
+		
+		fixedString = takeItFrom == -1 ? line : line[..takeItFrom];
+		if (isEmpty(fixedString)) 
+			continue;
+		linesInFile += trim(fixedString);
 	}
 	return linesInFile;
 }
