@@ -37,12 +37,3 @@ private list[loc] getAllLocalMethodCalls(M3 model)
 	// Note that we do not use sets as we want to keep multiples
 	return methodCalls & methodsInProject;
 }
-
-public test bool testCoupling()
-{
-	//model = createM3FromEclipseProject(|project://JavaTestLooseCoupling|);
-	model = createM3FromEclipseProject(|project://JavaTestDuplicationMultiClass|);
-	println(coupling(model));
-	
-	return true;
-}

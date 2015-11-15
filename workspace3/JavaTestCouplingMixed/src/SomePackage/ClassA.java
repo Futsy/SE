@@ -1,8 +1,9 @@
 package SomePackage;
 
-/* Very basic class used for testing volume calculations
- * Entire class has 38 lines of code
- * All methods have are 3 lines of code
+/* Very basic class used for testing coupling
+ * We have 5 method invocations
+ * 4 are into classes local to the project
+ * Of those 4, 3 are to an interface and 1 to a concrete class
  */
 
 interface SomeInterface
