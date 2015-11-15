@@ -9,7 +9,9 @@ import IO;
 import List;
 import String;
 
-// Get thetotal source lines of code in the parts
+/**
+ * Get the total source lines of code in the parts
+ */
 public list[str] LinesOfCode(set[loc] parts)
 {
 	// Get the lines per file and splice all lines to a single list
@@ -17,6 +19,9 @@ public list[str] LinesOfCode(set[loc] parts)
 	return [*locToSloc[f] | f <- locToSloc];
 } 
 
+/**
+ * Get the SLOC for a specific file
+ */
 public map[loc,list[str]] LinesOfCodePerFile(set[loc] parts) 
 {
 	map[loc, list[str]] fileToLines = ();
@@ -27,6 +32,9 @@ public map[loc,list[str]] LinesOfCodePerFile(set[loc] parts)
 	return fileToLines;
 }
 
+/**
+ * Removes all the // comments
+ */
 public list[str] RemoveSingleLineComments(loc part)
 {
 	linesInFile = [];
@@ -45,6 +53,9 @@ public list[str] RemoveSingleLineComments(loc part)
 	return linesInFile;
 }
 
+/**
+ * Removes all the /* to \*\/ comments
+ */
 public list[str] RemoveMultiLineComments(list[str] input)
 {
 	list[str] lines = [];
@@ -90,9 +101,9 @@ public list[str] RemoveMultiLineComments(list[str] input)
 	return lines;
 }
 
+/**
+ * This function replaces string literal comments with another placeholder
+ */
 public str RemoveQuotes(str line)
-{
-	return visit(line) {
-		case /<s:\"([^\"\\]|\\.)*\">/ => replaceAll(replaceAll(replaceAll(s, "/*", "~`"), "*/", "±§"), "//", "`§")
-	}
-}
+	= visit(line) { case /<s:\"([^\"\\]|\\.)*\">/ => replaceAll(replaceAll(replaceAll(s, "/*", "~`"), "*/", "±§"), "//", "`§") };
+

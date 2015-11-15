@@ -96,8 +96,8 @@ public void Report(int sloc, lrel[int, int] complexity, int duplications)
 /**
  * Method that prints the volume metric
  */
- public int ReportVolume(int sloc)
- {
+public int ReportVolume(int sloc)
+{
  	int class = 0;
  	
  	if (sloc < 66000) {
@@ -121,7 +121,6 @@ public void Report(int sloc, lrel[int, int] complexity, int duplications)
 
 /**
  * Method that prints the Complexity per unit
- \todo: refactor this redundant crap
  */
 public int ReportUnitSize(lrel[int, int] complexity)
 {
@@ -137,13 +136,13 @@ public int ReportUnitSize(lrel[int, int] complexity)
  	for (tuple[int complexity, int methodSloc] meth <- complexity) {
  		slocMethods += meth.methodSloc;
  		
- 		if (meth.methodSloc > 100) {
+ 		if (meth.methodSloc > 200) {
  			slocVeryHigh += meth.methodSloc;
  		}
- 		else if (meth.methodSloc > 50) {
+ 		else if (meth.methodSloc > 100) {
  			slocHigh += meth.methodSloc;
  		}
- 		else if (meth.methodSloc > 20) {
+ 		else if (meth.methodSloc > 50) {
  			slocModerate += meth.methodSloc;
  		}
  	}
@@ -181,10 +180,9 @@ public int ReportUnitSize(lrel[int, int] complexity)
 
 /**
  * Method that prints the Complexity per unit
- \todo: refactor this redundant crap
  */
- public int ReportComplexity(int sloc, lrel[int, int] complexity)
- {
+public int ReportComplexity(int sloc, lrel[int, int] complexity)
+{
  	if (sloc <= 0)
 		throw "\<=0 as input";
 		
@@ -243,9 +241,9 @@ public int ReportUnitSize(lrel[int, int] complexity)
  	return class;
  }
  
- /**
-  * Method that prints the duplications metric
-  */
+/**
+ * Method that prints the duplications metric
+ */
 public int ReportDuplications(int sloc, int duplications)
 {
 	if (sloc <= 0 || duplications <= 0)

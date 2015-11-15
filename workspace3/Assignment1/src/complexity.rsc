@@ -9,11 +9,13 @@ import List;
 
 import volume;
 
+/**
+ * Calculates the complexity for all units by iterating the AST
+ */
 public lrel[int complexity, int methodSloc] CalculateComplexity(set[Declaration] tree)
 {
 	returnList = [];
-	
-	// Basically we iterate this AST
+
 	visit (tree) {
 	case Declaration dec : method(_, _, _, _, Statement impl):
 		returnList += <Complexity(dec), size(LinesOfCode({impl@src}))>;
@@ -24,7 +26,9 @@ public lrel[int complexity, int methodSloc] CalculateComplexity(set[Declaration]
 	return returnList;
 }
 
-// Calculate the complexity for a given declaration
+/**
+ * Calculate the complexity for a given declaration
+ */
 public int Complexity(Declaration declaration) 
 {
 	complexity = 1;
@@ -42,12 +46,9 @@ public int Complexity(Declaration declaration)
 	case \case(_):			complexity += 1;
 	
 	// All the expressions
-	case conditional(_,_,_): 									
-							complexity += 1;
-	case \infix(_, "||", _): 	
-							complexity += 1;
-    case \infix(_, "&&", _): 	
-    						complexity += 1;
+	case conditional(_,_,_): complexity += 1;
+	case \infix(_, "||", _): complexity += 1;
+    case \infix(_, "&&", _): complexity += 1;
 	}
 	
 	return complexity;

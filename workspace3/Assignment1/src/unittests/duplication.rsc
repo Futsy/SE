@@ -18,8 +18,7 @@ test bool testNoDuplication()
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationNone|);
 	l = LinesOfCodePerFile(files(model));
 	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
-	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
-	//println(result);
+	result = toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
 	return result == 0.0;
 }
 
@@ -28,8 +27,7 @@ test bool testSingleDuplication()
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationSameClass6lines|);
 	l = LinesOfCodePerFile(files(model));
 	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
-	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
-	//println(result);
+	result = toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
 	return result == (2.0 / 3.0) * 100.0;
 }
 
@@ -38,8 +36,7 @@ test bool testSingleLargerDuplication()
 	model = createM3FromEclipseProject(|project://JavaTestDuplicationSameClass10lines|);
 	l = LinesOfCodePerFile(files(model));
 	linesInAllFiles = sum([ size(l[f]) | f <- l]); 
-	result =  toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
-	//println(result);
+	result = toReal(CalculateDuplication(l)) / toReal(linesInAllFiles) * 100.0;
 	return result == (20.0 / 26.0) * 100.0;
 }
 

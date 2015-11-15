@@ -1,4 +1,4 @@
-module tests
+module unittests::main
 
 // General
 import IO;
@@ -24,13 +24,13 @@ test bool TestReportDuplications(int sloc, int duplications)
 	catch: return sloc <= 0 || duplications <= 0;
 }
 
-test bool TestReportComplexity(int sloc, lrel[str, int, int] complexity)
+test bool TestReportComplexity(int sloc, lrel[int, int] complexity)
 {
 	try return ReportComplexity(sloc, complexity) in [0..5];
 	catch: return sloc <= 0 || size(complexity) == 0;
 }
 
-test bool TestReportUnitSize(lrel[str name, int complexity, int methodSloc] complexity)
+test bool TestReportUnitSize(lrel[int complexity, int methodSloc] complexity)
 {
 	try return ReportUnitSize(complexity) in [0..5];
 	catch: return size(complexity) == 0 || sum(complexity.methodSloc) == 0;
