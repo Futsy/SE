@@ -44,10 +44,10 @@ public int Complexity(Declaration declaration)
 	// All the expressions
 	case conditional(_,_,_): 									
 							complexity += 1;
-	case \infix(_, "||", _, list[Expression] subExpressions): 	
-							complexity += 1 + size(subExpressions);
-    case \infix(_, "&&", _, list[Expression] subExpressions): 	
-    						complexity += 1 + size(subExpressions);
+	case \infix(_, "||", _): 	
+							complexity += 1;
+    case \infix(_, "&&", _): 	
+    						complexity += 1;
 	}
 	
 	return complexity;
