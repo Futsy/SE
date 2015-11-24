@@ -1,4 +1,4 @@
-module Type1Text
+module MatchDetection::Text::Type1
 
 // Model
 import lang::java::jdt::m3::AST;
