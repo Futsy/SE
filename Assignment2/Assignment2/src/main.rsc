@@ -1,16 +1,35 @@
 module main
 
+// Model
+import lang::java::jdt::m3::AST;
+import lang::java::jdt::m3::Core;
+
+// General imports
 import IO;
 import List;
 
+// Helpers
+import Preprocessing::Tree::Serialize;
+
+// locations of projects for convenience (could just enter a path)
+public loc testProject  = |project://testProject|;
+public loc smallProject = |project://smallsql0.21_src|;
+public loc largeProject = |project://hsqldb-2.3.1|;
 
 /**
- *
- * @param
+ * Main entry for the duplication function (Report)
+ * @param the project you want to report the dupes of
  */
-public void ReportDuplicates(bool text)
+public void ReportDuplicates(loc project)
 {
+	println("-- Creation ----------------");
 	
+	// Parse program and generate the AST
 	
+	// Create the AST
+	ast = createAstsFromEclipseProject(project, true);
+	println(" - Created AST");
+	
+	Serialize(ast);
 	
 }

@@ -1,0 +1,23 @@
+module main
+
+import IO;
+import List;
+
+
+/**
+ *
+ * @param
+ */
+public void ReportDuplicates(bool text)
+{
+	println("-- Creation ----------------");
+	
+	// Create the model
+	model = createM3FromEclipseProject(project);
+	println(" - Created model");
+	
+	ast = { createAstFromFile(f, true) | f <- files(model)};
+	println(" - Created AST");
+	
+	
+}

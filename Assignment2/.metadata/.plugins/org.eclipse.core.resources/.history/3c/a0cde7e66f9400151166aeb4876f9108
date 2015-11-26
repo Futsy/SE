@@ -1,0 +1,57 @@
+module Serialize
+
+// Model
+import lang::java::jdt::m3::AST;
+import lang::java::jdt::m3::Core;
+import lang::java::m3::Core;
+import lang::java::m3::AST;
+
+// General imports
+import IO;
+import List;
+import Node;
+
+// Custom data type to keep the nodes split
+data AstNode
+	= \declarationNode(str name, int size, loc src)
+	| \statementNode(str name, int size, loc src)
+	| \expressionNode(str name, int size, loc src)
+	| \typeNode(str name, int size); 
+
+/**
+ * This function turns an AST into a serialzed AST
+ * @param the AST you want to serialize
+ * @return the serialized AST
+ */
+public void Serialize(set[Declaration] ast)
+{	
+	// We serialize the AST by a preorder traversal
+	list[AstNode] nodes = [];
+	
+	top-down visit(ast) {
+	case \Declaration d: nodes += declarationNode(getName(d), childrenSize(d), |file:///|);
+	case \Statement s: nodes += statementNode("<getName(s)>", childrenSize(s), s@src); 
+	case \Expression e: nodes += expressionNode("<getName(e)>", childrenSize(e), |file:///|);
+	case \Type t: nodes += typeNode("<getName(t)>", childrenSize(t));
+	}
+	
+	iprintln(nodes);
+}
+
+/**
+ * Obtains the name of the object
+ * @param Node
+ * @return amount of children
+ */
+ private int childrenSize(node n) {
+ 	int count = 0;
+ 	
+ 	visit(ast) {
+	case \Declaration d: count += 1;
+	case \Statement s: count += 1;
+	case \Expression e: count += 1;
+	case \Type t: count += 1;
+	}
+	
+	return count;
+ }

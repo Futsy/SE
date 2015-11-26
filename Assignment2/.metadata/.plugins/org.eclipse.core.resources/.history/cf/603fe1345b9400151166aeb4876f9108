@@ -1,0 +1,36 @@
+module Serialize
+
+// Model
+import lang::java::jdt::m3::AST;
+import lang::java::jdt::m3::Core;
+
+// General imports
+import IO;
+import List;
+
+/**
+ * This function turns an AST into a serialzed AST
+ * @param the AST you want to serialize
+ * @return the serialized AST
+ */
+public void Serialize(set[Declaration] ast)
+{
+	allDecs = [];
+	
+	// We serialize the AST by a preorder traversal
+	visit (ast) {
+	case Declaration d: {
+		println("found something");
+		allDecs = [ *(d@modifiers?[]) | /Declaration d := decl ];
+		
+	}
+	default: { // For each visited node N
+		// Emit N as the root
+		println("yeye");
+		// Associate the number of AST nodes transitively derived from N
+		
+		return;
+	}
+	}
+	println("test" + allDecs);
+}

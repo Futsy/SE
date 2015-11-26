@@ -1,0 +1,34 @@
+module main
+
+// Model
+import lang::java::jdt::m3::AST;
+import lang::java::jdt::m3::Core;
+
+// General imports
+import IO;
+import List;
+
+
+// locations of projects for convenience (could just enter a path)
+public loc testProject  = |project://testproject|;
+public loc smallProject = |project://smallsql0.21_src|;
+public loc largeProject = |project://hsqldb-2.3.1|;
+
+/**
+ * Main entry for the duplication function (Report)
+ * @param the project
+ */
+public void ReportDuplicates(loc project)
+{
+	println("-- Creation ----------------");
+	
+	// Create the model
+	model = createM3FromEclipseProject(project);
+	println(" - Created model");
+	
+	// Create the AST
+	ast = { createAstFromFile(f, true) | f <- files(model)};
+	println(" - Created AST");
+	
+	
+}
