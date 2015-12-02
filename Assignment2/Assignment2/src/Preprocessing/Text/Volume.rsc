@@ -10,27 +10,25 @@ import List;
 import String;
 
 /**
- * Get the total source lines of code in the parts
+ * Get the SLOC for files
  */
-public list[str] LinesOfCode(set[loc] parts)
-{
-	// Get the lines per file and splice all lines to a single list
-	locToSloc = LinesOfCodePerFile(parts);
-	return [*locToSloc[f] | f <- locToSloc];
-} 
-
-/**
- * Get the SLOC for a specific file
- */
-public map[loc,list[str]] LinesOfCodePerFile(set[loc] parts) 
+public map[loc,list[str]] LinesOfCode(set[loc] parts) 
 {
 	map[loc, list[str]] fileToLines = ();
 	
 	for (part <- parts) {
-		fileToLines[part] = RemoveSingleLineComments(RemoveMultiLineComments(part));
+		list[str] lines = RemoveSingleLineComments(RemoveMultiLineComments(part));
+		fileToLines[part] = [RemoveWhiteSpace(line) | line <- lines];
 	}
+	
 	return fileToLines;
 }
+
+/**
+ * Removes all the white space from a string
+ */
+public str RemoveWhiteSpace(str line)
+	= escape(line, (" " : "", "\t" : ""));
 
 /**
  * Removes all the // comments
@@ -38,6 +36,7 @@ public map[loc,list[str]] LinesOfCodePerFile(set[loc] parts)
 public list[str] RemoveSingleLineComments(list[str] lines)
 {
 	linesInFile = [];
+	
 	for (line <- lines) {	
 		// Remove all string literal content
 		line = RemoveQuotes(line);			
@@ -50,6 +49,7 @@ public list[str] RemoveSingleLineComments(list[str] lines)
 			continue;
 		linesInFile += trim(fixedString);
 	}
+	
 	return linesInFile;
 }
 

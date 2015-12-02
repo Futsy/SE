@@ -38,7 +38,7 @@ test bool MixedComments()
 int linesInFile(str fileName)
 {
 	model = createM3FromEclipseProject(|project://TestPreprocessing|);
-	fileToLines = LinesOfCodePerFile(files(model));
+	fileToLines = LinesOfCode(files(model));
 	lines = [ *fileToLines[l] | l <- fileToLines, l.file == fileName];
 	return size(lines);
 }
