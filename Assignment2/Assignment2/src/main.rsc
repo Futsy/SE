@@ -16,6 +16,7 @@ import Preprocessing::Text::Volume;
 public loc testProject  = |project://testProject|;
 public loc smallProject = |project://smallsql0.21_src|;
 public loc largeProject = |project://hsqldb-2.3.1|;
+public loc ppUnitTest 	= |project://TestPreprocessing|;
 
 /**
  * Main entry for the duplication function (Report)
@@ -62,6 +63,8 @@ public void ReportDuplicates(loc project)
 		println(output);
 	}
 	
+	CreateCsvFromMatrix(matrix);
+	
 	// Make list van elke diagonal
 	list[list[bool]] diagonal = [];
 	int i = size(matrix[0]) - 1; //\todo: careful on empty
@@ -72,4 +75,20 @@ public void ReportDuplicates(loc project)
 	}
 	i -= 1;*/
 
+}
+
+void CreateCsvFromMatrix(list[list[bool]] matrix)
+{
+	// Wirte header
+	writeFile(|project://Assignment2/output/clones.csv|, "x,y,file1,line1,file2,line2\r\n");
+	
+	// Write a row to the file for each row in the matrix
+	// TODO: Add support for file names and line number in file.
+	for( X <- [0..size(matrix)])
+	{
+		for( Y <- [0..size(matrix[X])])
+		{
+			if(matrix[X][Y]) appendToFile(|project://Assignment2/output/clones.csv|,"<X>,<Y>,unknown file,unknown line,unknown file,unknown line\r\n");
+		}
+	}
 }
