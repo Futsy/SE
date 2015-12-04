@@ -8,6 +8,9 @@ import lang::java::jdt::m3::Core;
 import IO;
 import List;
 import Boolean;
+import Map;
+import Set;
+import util::Math;
 
 // Helpers
 import Preprocessing::Text::Volume;
@@ -17,6 +20,14 @@ public loc testProject  = |project://testProject|;
 public loc smallProject = |project://smallsql0.21_src|;
 public loc largeProject = |project://hsqldb-2.3.1|;
 public loc ppUnitTest 	= |project://TestPreprocessing|;
+
+// Aliases
+alias lineMatrix = list[list[bool]];			// A matrix of lines in two files. A 'true' in a cell indicates that both lines have the same content
+alias filePair = tuple[loc first,loc second];				
+alias fileMatrix = map[filePair, lineMatrix];	// A matrix of lineMatrices. Contains a lineMatrix for each filePair in the project
+
+alias fileLine = tuple[loc, int];
+alias clone = tuple[fileLine, fileLine];
 
 /**
  * Main entry for the duplication function (Report)
@@ -35,60 +46,97 @@ public void ReportDuplicates(loc project)
 	//\todo: Volume requires tests
 	map[loc, list[str]] lines = LinesOfCode(files);
 	
+	matrix = CreateFileMatrix(lines);
 	
-	// Create the matrix
-	list[list[bool]] matrix = [];
-	for (fileX <- files) {
+	for(filePair <- matrix)
+	{				
+		lm = matrix[filePair];
 		
-		for (lineX <- lines[fileX]) {
-			list[bool] line = [];
-				
-			for (fileY <- files) {
-				for (lineY <- lines[fileY]) {
-					line += lineX == lineY;
-				}
-			}
-			
-			matrix += [line];
-		}
-	}
-	
-	// output debug
-	println("abcdefghij");
-	for (row <- matrix) {
-		str output = "";
-		for (col <- row) {
-			output += col ? "*" : "-";
-		}
-		println(output);
-	}
-	
-	CreateCsvFromMatrix(matrix);
-	
-	// Make list van elke diagonal
-	list[list[bool]] diagonal = [];
-	int i = size(matrix[0]) - 1; //\todo: careful on empty
-	//testding = matrix[0][2];
-	/*int j = i; \todo: don't do this but use the idea?
-	for (int k = 0; k < j; j++) {
+		height = size(lm);
+		width = size(lm[0]);	// TODO: fucked if it's empty
 		
+		list[list[clone]] diagonals = GetDiagonals(filePair.first, filePair.second, width, height, lm);
+		
+		iprintln(diagonals);	
+		println(size(diagonals));	
+		break;
 	}
-	i -= 1;*/
-
 }
 
-void CreateCsvFromMatrix(list[list[bool]] matrix)
+fileMatrix CreateFileMatrix(map[loc, list[str]] files)
 {
-	// Wirte header
-	writeFile(|project://Assignment2/output/clones.csv|, "x,y,file1,line1,file2,line2\r\n");
-	
-	// Write a row to the file for each row in the matrix
-	// TODO: Add support for file names and line number in file.
-	for( X <- [0..size(matrix)])
+	fileMatrix mat = ();
+	for(fx <- files)
 	{
-		for( Y <- [0..size(matrix[X])])
+		for(fy <- files)
 		{
-			if(matrix[X][Y]) appendToFile(|project://Assignment2/output/clones.csv|,"<X>,<Y>,unknown file,unknown line,unknown file,unknown line\r\n");
+			mat[<fx,fy>] = CreateLineMatrix(files[fx], files[fy]);
 		}
 	}
+	return mat;
+}
+
+lineMatrix CreateLineMatrix(list[str] x, list[str] y)
+{
+	mat = [];
+	for(lx <- x)
+	{
+		list[bool] row = [];
+		for(ly <- y)
+		{
+			row += ly == lx;
+		}
+		mat += [row];
+	}
+	return mat;
+}
+
+list[list[clone]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatrix matrix)
+{
+	list[list[clone]] diagonals = [];
+	
+	for(coords <- getAllDiags(matrix))
+	{
+		diagonal = [];
+		
+		for(c <- coords)
+		{
+			if(matrix[c.x][c.y])
+				diagonal += <<fx,c.x>,<fy,c.y>>;
+		}
+		
+		if(size(diagonal) > 0) diagonals += [diagonal];
+	}
+	
+	println("<fx.path> vs <fy.path>:");
+
+		for (row <- matrix) {
+			str output = "";
+			for (col <- row) {
+				output += col ? "*" : "-";
+			}
+			println(output);
+		}	
+	return diagonals;	
+}
+
+list[list[tuple[int x,int y]]] getAllDiags(lineMatrix m)
+{
+	height = size(m);
+	width = size(m[0]);
+	
+	md = max(height, width);
+	maxCoords = [0..md] * [0..md];
+	
+	r = [];
+	
+	for(I <- [0..width])
+	{
+		for(J <- [0..height])
+		{
+			r += [[ <x,y> | <x,y> <- maxCoords, x+J == y+I && x < width && y < height ]];
+		}
+	}
+	
+	return dup(r);
 }
