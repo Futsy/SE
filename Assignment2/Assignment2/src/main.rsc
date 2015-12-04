@@ -32,6 +32,8 @@ alias dupLine = tuple[fileLine x, fileLine y];
 alias t1clone = tuple[tuple[loc,int,int],tuple[loc,int,int]];
 alias t3clone = list[t1clone];
 
+alias coord = tuple[int x, int y];
+
 /**
  * Main entry for the duplication function (Report)
  * @param the project you want to report the dupes of
@@ -71,8 +73,6 @@ public void ReportDuplicates(loc project)
 fileMatrix CreateFileMatrix(map[loc, list[str]] files)
 {
 	fileMatrix mat = ();
-	
-	//( <fx,fy> : CreateLineMatrix(files[fx], files[fy]) | <fx,fy> <- files * files);
 	
 	for(fx <- files)
 	{
@@ -116,45 +116,37 @@ list[list[dupLine]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatr
 		
 		if(size(diagonal) > 0) diagonals += [diagonal];
 	}
-	
-//	println("<fx.path> vs <fy.path>:");
-//
-//		for (row <- matrix) {
-//			str output = "";
-//			for (col <- row) {
-//				output += col ? "*" : "-";
-//			}
-//			println(output);
-//		}	
+		
 	return diagonals;	
 }
 
 list[list[tuple[int x,int y]]] getAllDiags(lineMatrix m)
 {
-	height = size(m);
-	width = size(m[0]);
-	
-	md = max(height, width);
-	maxCoords = [0..md] * [0..md];
-	
-	r = [];
-	
-	for(I <- [0..width])
+	try
 	{
-		for(J <- [0..height])
-		{
-			r += [[ <x,y> | <x,y> <- maxCoords, x+J == y+I && x < width && y < height ]];
-		}
+		height = size(m);	
+		width = size(m[0]);
+		
+		// Create all coordinates in the matrix to start diagonals from. 
+		// This is equal to the top row and the left column
+		topRowCoords = [0..width] * [0];
+		leftColCoords = [0] * [0..height];
+		startCoords = dup(topRowCoords + leftColCoords);
+		
+		// Use GetDiagonals to get diagonals starting at those coordinates
+		return [GetDiagonal(c, width,height) | c <- startCoords];
 	}
-	
-	return dup(r);
+	catch IndexOutOfBounds(i) : return [];
 }
+
+/* Return a list of coordinates that form a diagonal line in a matrix of a specified width and height
+ * from a specified starting point. */
+public list[coord]GetDiagonal(coord startCoord, int width, int height) =
+	[<startCoord.x+i, startCoord.y+i> | i <- [0..min(width-startCoord.x, height - startCoord.y)]];
 
 list[t1clone] GetT1Clone(int threshold, list[list[dupLine]] diagonals)
 {
 	clones = [];
-	
-	//tuple[tuple[loc,int,int],tuple[loc,int,int]]
 
 	for(diagonal <- diagonals)
 	{
