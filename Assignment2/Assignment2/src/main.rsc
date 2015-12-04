@@ -104,7 +104,7 @@ list[list[dupLine]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatr
 {
 	list[list[dupLine]] diagonals = [];
 	
-	for(coords <- getAllDiags(matrix))
+	for(coords <- getAllDiags(matrix, fx == fy))
 	{
 		diagonal = [];
 		
@@ -120,21 +120,26 @@ list[list[dupLine]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatr
 	return diagonals;	
 }
 
-list[list[tuple[int x,int y]]] getAllDiags(lineMatrix m)
+list[list[tuple[int x,int y]]] getAllDiags(lineMatrix m, bool onlyBelowOrigin)
 {
 	try
 	{
 		height = size(m);	
 		width = size(m[0]);
 		
-		// Create all coordinates in the matrix to start diagonals from. 
-		// This is equal to the top row and the left column
-		topRowCoords = [0..width] * [0];
-		leftColCoords = [0] * [0..height];
-		startCoords = dup(topRowCoords + leftColCoords);
+		/* Create all coordinates in the matrix to start diagonals from. 
+		 * This is equal to the top row and the left column
+		 * optionally omit all diagonals top-left of the origin. 
+		 * This is used for when we want to compare clone matrices
+		 * created by comparing a file with itself. In that case it makes
+		 * no sense to look both beneath and above the matrix' diagonal
+		 */
+		 
+		startCoords = [0] * [0..height];						// Left column coordinates
+		if(!onlyBelowOrigin) startCoords += [0..width] * [0];	// Top row coordinates
 		
 		// Use GetDiagonals to get diagonals starting at those coordinates
-		return [GetDiagonal(c, width,height) | c <- startCoords];
+		return [GetDiagonal(c, width,height) | c <- dup(startCoords)];
 	}
 	catch IndexOutOfBounds(i) : return [];
 }
