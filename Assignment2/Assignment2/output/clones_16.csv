@@ -1,0 +1,13 @@
+x,y,file1,line1,file2,line2
+0,0,unknown file,unknown line,unknown file,unknown line
+1,1,unknown file,unknown line,unknown file,unknown line
+2,2,unknown file,unknown line,unknown file,unknown line
+3,3,unknown file,unknown line,unknown file,unknown line
+4,4,unknown file,unknown line,unknown file,unknown line
+5,5,unknown file,unknown line,unknown file,unknown line
+6,6,unknown file,unknown line,unknown file,unknown line
+7,7,unknown file,unknown line,unknown file,unknown line
+7,9,unknown file,unknown line,unknown file,unknown line
+8,8,unknown file,unknown line,unknown file,unknown line
+9,7,unknown file,unknown line,unknown file,unknown line
+9,9,unknown file,unknown line,unknown file,unknown line
