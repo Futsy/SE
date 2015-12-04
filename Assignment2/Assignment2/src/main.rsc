@@ -26,8 +26,11 @@ alias lineMatrix = list[list[bool]];			// A matrix of lines in two files. A 'tru
 alias filePair = tuple[loc first,loc second];				
 alias fileMatrix = map[filePair, lineMatrix];	// A matrix of lineMatrices. Contains a lineMatrix for each filePair in the project
 
-alias fileLine = tuple[loc, int];
-alias clone = tuple[fileLine, fileLine];
+alias fileLine = tuple[loc file, int lineNr];
+alias dupLine = tuple[fileLine x, fileLine y];
+
+alias t1clone = tuple[tuple[loc,int,int],tuple[loc,int,int]];
+alias t3clone = list[t1clone];
 
 /**
  * Main entry for the duplication function (Report)
@@ -48,6 +51,8 @@ public void ReportDuplicates(loc project)
 	
 	matrix = CreateFileMatrix(lines);
 	
+	list[list[dupLine]] diagonals = [];
+	
 	for(filePair <- matrix)
 	{				
 		lm = matrix[filePair];
@@ -55,22 +60,26 @@ public void ReportDuplicates(loc project)
 		height = size(lm);
 		width = size(lm[0]);	// TODO: fucked if it's empty
 		
-		list[list[clone]] diagonals = GetDiagonals(filePair.first, filePair.second, width, height, lm);
-		
-		iprintln(diagonals);	
-		println(size(diagonals));	
-		break;
+		diagonals += GetDiagonals(filePair.first, filePair.second, width, height, lm);
 	}
+	
+	clones = GetT1Clone(6, diagonals);
+	iprintln(clones);
+	println(size(clones));
 }
 
 fileMatrix CreateFileMatrix(map[loc, list[str]] files)
 {
 	fileMatrix mat = ();
+	
+	//( <fx,fy> : CreateLineMatrix(files[fx], files[fy]) | <fx,fy> <- files * files);
+	
 	for(fx <- files)
 	{
 		for(fy <- files)
 		{
-			mat[<fx,fy>] = CreateLineMatrix(files[fx], files[fy]);
+			if(<fy,fx> notin mat)
+				mat[<fx,fy>] = CreateLineMatrix(files[fx], files[fy]);
 		}
 	}
 	return mat;
@@ -91,9 +100,9 @@ lineMatrix CreateLineMatrix(list[str] x, list[str] y)
 	return mat;
 }
 
-list[list[clone]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatrix matrix)
+list[list[dupLine]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatrix matrix)
 {
-	list[list[clone]] diagonals = [];
+	list[list[dupLine]] diagonals = [];
 	
 	for(coords <- getAllDiags(matrix))
 	{
@@ -108,15 +117,15 @@ list[list[clone]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatrix
 		if(size(diagonal) > 0) diagonals += [diagonal];
 	}
 	
-	println("<fx.path> vs <fy.path>:");
-
-		for (row <- matrix) {
-			str output = "";
-			for (col <- row) {
-				output += col ? "*" : "-";
-			}
-			println(output);
-		}	
+//	println("<fx.path> vs <fy.path>:");
+//
+//		for (row <- matrix) {
+//			str output = "";
+//			for (col <- row) {
+//				output += col ? "*" : "-";
+//			}
+//			println(output);
+//		}	
 	return diagonals;	
 }
 
@@ -140,3 +149,52 @@ list[list[tuple[int x,int y]]] getAllDiags(lineMatrix m)
 	
 	return dup(r);
 }
+
+list[t1clone] GetT1Clone(int threshold, list[list[dupLine]] diagonals)
+{
+	clones = [];
+	
+	//tuple[tuple[loc,int,int],tuple[loc,int,int]]
+
+	for(diagonal <- diagonals)
+	{
+		int sequence = 0;
+		bool inClone = false;
+		
+		diagLen = size(diagonal);
+		
+		tuple[int x,int y] cloneStart = <diagonal[0].x.lineNr,diagonal[0].y.lineNr>;	// todo bound check
+		
+		for(i <- [0..diagLen])
+		{
+			curr = diagonal[i];
+			
+			if(i < diagLen-1)
+			{				
+				next = diagonal[i+1];
+				// look forward
+				if(!(curr.x.lineNr+1 == next.x.lineNr && curr.y.lineNr+1 == next.y.lineNr))
+				{
+					// End of clone
+					int cloneLength = curr.x.lineNr - cloneStart.x;
+					if(cloneLength >= threshold) 
+						clones += <<curr.x.file, cloneStart.x, curr.x.lineNr>,<curr.y.file, cloneStart.y, curr.y.lineNr>>;
+					
+					// reset start of clone to current line
+					cloneStart = <next.x.lineNr, next.y.lineNr>;
+				}
+			}
+			else if(i > 0)
+			{
+				prev = diagonal[i-1];
+				if(curr.x.lineNr == prev.x.lineNr+1 && curr.y.lineNr == prev.y.lineNr+1)
+				{
+					if(curr.x.lineNr - cloneStart.x >= threshold) 
+						clones += <<curr.x.file, cloneStart.x, curr.x.lineNr>,<curr.y.file, cloneStart.y, curr.y.lineNr>>;
+				}
+			}		
+		}
+	}
+	return clones;
+}
+
