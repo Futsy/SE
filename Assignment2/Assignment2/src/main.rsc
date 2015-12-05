@@ -146,52 +146,60 @@ list[list[tuple[int x,int y]]] getAllDiags(lineMatrix m, bool onlyBelowOrigin)
 
 /* Return a list of coordinates that form a diagonal line in a matrix of a specified width and height
  * from a specified starting point. */
-public list[coord]GetDiagonal(coord startCoord, int width, int height) =
+list[coord]GetDiagonal(coord startCoord, int width, int height) =
 	[<startCoord.x+i, startCoord.y+i> | i <- [0..min(width-startCoord.x, height - startCoord.y)]];
 
-list[t1clone] GetT1Clone(int threshold, list[list[dupLine]] diagonals)
-{
-	clones = [];
+list[t1clone] GetT1Clone(int threshold, list[list[dupLine]] diagonals) = [*GetT1ClonesInLine(threshold, diagonal) | diagonal <- diagonals];
 
-	for(diagonal <- diagonals)
+
+/* Get all the clones from a single diagonal line in the 'duplication matrix'
+ * Threshold: The minumum number of lines that a clone should have
+ * Diagonal: A list of file-linenumber pairs. Each pair represents a duplicate line
+ */
+list[t1clone] GetT1ClonesInLine(int threshold, list[dupLine] diagonal)
+{
+	clones = [];	
+	diagLen = size(diagonal);	
+	cloneStart = 0;
+	
+	// Iterate over all the items in the diagonal line of the 'duplication matrix'
+	for(i <- [0..diagLen])
 	{
-		int sequence = 0;
-		bool inClone = false;
+		curr = diagonal[i];
 		
-		diagLen = size(diagonal);
-		
-		tuple[int x,int y] cloneStart = <diagonal[0].x.lineNr,diagonal[0].y.lineNr>;	// todo bound check
-		
-		for(i <- [0..diagLen])
-		{
-			curr = diagonal[i];
-			
-			if(i < diagLen-1)
-			{				
-				next = diagonal[i+1];
-				// look forward
-				if(!(curr.x.lineNr+1 == next.x.lineNr && curr.y.lineNr+1 == next.y.lineNr))
-				{
-					// End of clone
-					int cloneLength = curr.x.lineNr - cloneStart.x;
-					if(cloneLength >= threshold) 
-						clones += <<curr.x.file, cloneStart.x, curr.x.lineNr>,<curr.y.file, cloneStart.y, curr.y.lineNr>>;
-					
-					// reset start of clone to current line
-					cloneStart = <next.x.lineNr, next.y.lineNr>;
-				}
-			}
-			else if(i > 0)
+		// If we are not at the end of the line...
+		if(i < diagLen-1)
+		{				
+			// Check if the next line is a 'continuation' of the current clone
+			// If it is not, we have found the end of the current clone.			
+			next = diagonal[i+1];			
+			if(!succeedingLines(curr,next))  
 			{
-				prev = diagonal[i-1];
-				if(curr.x.lineNr == prev.x.lineNr+1 && curr.y.lineNr == prev.y.lineNr+1)
-				{
-					if(curr.x.lineNr - cloneStart.x >= threshold) 
-						clones += <<curr.x.file, cloneStart.x, curr.x.lineNr>,<curr.y.file, cloneStart.y, curr.y.lineNr>>;
-				}
-			}		
+				// If the current clone is long enough, store it as a clone
+				if(i - cloneStart >= threshold) clones += createClone(diagonal, cloneStart, i);
+				
+				// The next line will be the start of the next (possible) clone
+				cloneStart = i+i;
+			}
 		}
+		// If we are at the end of the line...
+		else if(i > 0)
+		{
+			// Check to see if the current line is a continuation of the previous line. 
+			// If it is, the last line is also the end of the current clone.
+			prev = diagonal[i-1];
+			if(succeedingLines(prev,curr) && (i - cloneStart >= threshold))	clones +=  createClone(diagonal, cloneStart, i);
+		}		
 	}
 	return clones;
 }
 
+bool succeedingLines(dupLine first, dupLine second) =
+	first.x.lineNr+1 == second.x.lineNr && first.y.lineNr+1 == second.y.lineNr; 
+
+t1clone createClone(list[dupLine] diagonal, int startInx, int endInx)
+{
+	s = diagonal[startInx];
+	e = diagonal[endInx];
+	return <<s.x.file, s.x.lineNr, e.x.lineNr>,<s.y.file, s.y.lineNr, e.y.lineNr>>;
+}
