@@ -66,11 +66,11 @@ public void ReportDuplicates(loc project)
 		diagonals += GetDiagonals(filePair.first, filePair.second, width, height, lm);
 	}
 	
-	clones = GetT1Clone(6, diagonals);
-	//iprintln(clones);
+	t1clones = GetT1Clone(6, diagonals);
+	iprintln(t1clones);
 	//println(size(clones));
 	
-	iprintln(GetT3Clones(6, clones));
+	iprintln(GetT3Clones(10, t1clones));
 }
 
 fileMatrix CreateFileMatrix(map[loc, list[str]] files)
@@ -115,7 +115,7 @@ list[list[dupLine]] GetDiagonals(loc fx, loc fy, int width, int height, lineMatr
 		for(c <- coords)
 		{
 			if(matrix[c.y][c.x])
-				diagonal += <<fx,c.x>,<fy,c.y>>;
+				diagonal += <<fx,c.y>,<fy,c.x>>;
 		}
 		
 		if(size(diagonal) > 0) diagonals += [diagonal];
@@ -220,7 +220,7 @@ list[t3clone] GetT3Clones(int threshold, list[t1clone] t1Clones)
 		list[t1clone] t1 = [t1Clone];
 		while (true)
 		{
-			t1 = FindNextType1(threshold, t1[0], t1Clones);
+			t1 = FindNextType1(threshold, t1[0], t1Clones, false, true);
 			if (size(t1) == 0)
 				break;
 			t3Clone += t1;
@@ -233,11 +233,11 @@ list[t3clone] GetT3Clones(int threshold, list[t1clone] t1Clones)
 	return t3Clones;
 }
 
-list[t1clone] FindNextType1(int threshold, t1clone clone, list[t1clone] t1Clones)
+list[t1clone] FindNextType1(int threshold, t1clone clone, list[t1clone] t1Clones, bool incX, bool incY)
 {
 	for (bound <- [2..threshold + 1]) {
 		for (t1Clone2 <- t1Clones) {
-			if (clone.x.end + bound == t1Clone2.x.s && (clone.y.end + bound == t1Clone2.y.s)){
+			if (clone.x.end + (incX ? bound : 1) == t1Clone2.x.s && (clone.y.end + (incY ? bound : 0) == t1Clone2.y.s) && clone.x.file == t1Clone2.x.file && clone.y.file == t1Clone2.y.file){
 				return [t1Clone2];
 			}
 		}
