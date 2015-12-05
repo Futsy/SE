@@ -14,6 +14,8 @@ import util::Math;
 
 // Helpers
 import Preprocessing::Text::Volume;
+import Helpers::Print;
+import Helpers::Types;
 
 // locations of projects for convenience (could just enter a path)
 public loc testProject  = |project://testProject|;
@@ -21,19 +23,6 @@ public loc smallProject = |project://smallsql0.21_src|;
 public loc largeProject = |project://hsqldb-2.3.1|;
 public loc ppUnitTest 	= |project://TestPreprocessing|;
 
-// Aliases
-alias lineMatrix = list[list[bool]];			// A matrix of lines in two files. A 'true' in a cell indicates that both lines have the same content
-alias filePair = tuple[loc first,loc second];				
-alias fileMatrix = map[filePair, lineMatrix];	// A matrix of lineMatrices. Contains a lineMatrix for each filePair in the project
-
-alias fileLine = tuple[loc file, int lineNr];
-alias dupLine = tuple[fileLine x, fileLine y];
-
-alias t1Pair  = tuple[loc file, int s, int end];
-alias t1clone = tuple[t1Pair x, t1Pair y];
-alias t3clone = list[t1clone];
-
-alias coord = tuple[int x, int y];
 
 /**
  * Main entry for the duplication function (Report)
@@ -54,6 +43,8 @@ public void ReportDuplicates(loc project)
 	
 	matrix = CreateFileMatrix(lines);
 	
+	printMatrix(matrix);
+	
 	list[list[dupLine]] diagonals = [];
 	
 	for(filePair <- matrix)
@@ -67,10 +58,13 @@ public void ReportDuplicates(loc project)
 	}
 	
 	t1clones = GetT1Clone(6, diagonals);
-	iprintln(t1clones);
+	
+	PrintT1Clones(t1clones);
+	
+	//iprintln(t1clones);
 	//println(size(clones));
 	
-	iprintln(GetT3Clones(10, t1clones));
+	//iprintln(GetT3Clones(10, t1clones));
 }
 
 fileMatrix CreateFileMatrix(map[loc, list[str]] files)
@@ -170,8 +164,7 @@ list[t1clone] GetT1ClonesInLine(int threshold, list[dupLine] diagonal)
 {
 	clones = [];	
 	diagLen = size(diagonal);	
-	cloneStart = 0;
-	
+	cloneStart = 0;	
 	
 	// Iterate over all the items in the diagonal line of the 'duplication matrix'
 	for(i <- [0..diagLen])
@@ -187,7 +180,7 @@ list[t1clone] GetT1ClonesInLine(int threshold, list[dupLine] diagonal)
 			if(!succeedingLines(curr,next))  
 			{
 				// If the current clone is long enough, store it as a clone
-				if(i - cloneStart >= threshold) clones += createClone(diagonal, cloneStart, i);
+				if(i - cloneStart >= (threshold-1)) clones += createClone(diagonal, cloneStart, i);
 				
 				// The next line will be the start of the next (possible) clone
 				cloneStart = i+1;
@@ -199,7 +192,7 @@ list[t1clone] GetT1ClonesInLine(int threshold, list[dupLine] diagonal)
 			// Check to see if the current line is a continuation of the previous line. 
 			// If it is, the last line is also the end of the current clone.
 			prev = diagonal[i-1];
-			if(succeedingLines(prev,curr) && (i - cloneStart >= threshold))	clones +=  createClone(diagonal, cloneStart, i);
+			if(succeedingLines(prev,curr) && (i - cloneStart >= (threshold-1)))	clones +=  createClone(diagonal, cloneStart, i);
 		}		
 	}
 	return clones;
@@ -256,4 +249,6 @@ t1clone createClone(list[dupLine] diagonal, int startInx, int endInx)
 	e = diagonal[endInx];
 	return <<s.x.file, s.x.lineNr, e.x.lineNr>,<s.y.file, s.y.lineNr, e.y.lineNr>>;
 }
+
+
 
