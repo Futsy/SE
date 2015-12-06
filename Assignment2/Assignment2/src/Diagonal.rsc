@@ -24,7 +24,7 @@ public Diagonals CheckDiagonals(fileMatrix matrix)
 {
 	Diagonals diagonals = [];
 	
-	for(filePair <- matrix) {
+	for (filePair <- matrix) {
 		comparisonMatrix = matrix[filePair];
 	
 		height = size(comparisonMatrix);
@@ -50,18 +50,18 @@ private Diagonals GetDiagonals(loc first, loc second, int width, int height, Lin
 {
 	Diagonals diagonals = [];
 	
-	for(coordinates <- getAllDiags(matrix, first == second)) {
+	for (coordinates <- getAllDiags(matrix, first == second)) {
 		diagonal = [];
 		
 		// For each coordinate we check if it is in the matrix (reverse!!) and add it
-		for(coordinate <- coordinates) {
-			if(matrix[coordinate.y][coordinate.x]) {
+		for (coordinate <- coordinates) {
+			if (matrix[coordinate.y][coordinate.x]) {
 				diagonal += <<first, coordinate.y>, <second, coordinate.x>>;
 			}
 		}
 		
 		// We are not interested in diagonals that do not have any true values (no dupes)
-		if(!isEmpty(diagonal)) {
+		if (!isEmpty(diagonal)) {
 			diagonals += [diagonal];
 		}
 	}
@@ -90,7 +90,7 @@ private Coordinates getAllDiags(LineMatrix mat, bool onlyBelowOrigin)
 		 * no sense to look both beneath and above the matrix' diagonal
 		 */
 		startCoords = [];
-		if(onlyBelowOrigin) {
+		if (onlyBelowOrigin) {
 			startCoords = [0] * [1..height];
 		}
 		else {
