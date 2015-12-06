@@ -91,3 +91,15 @@ private t1clone createClone(list[duplicateLine] diagonal, int startIndex, int en
 	e = diagonal[endIndex];
 	return <<s.x.file, s.x.lineNr, e.x.lineNr>,<s.y.file, s.y.lineNr, e.y.lineNr>>;
 }
+
+/**
+ * Function that 'pretty prints' a list of type1 clones
+ * @param	The list of type1 clones to be printed 
+ */
+public void PrintT1Clones(list[t1clone] t1clones)
+{
+	for (c <- t1clones) {
+		println("<c.x.file.file> [<c.x.s>..<c.x.end>] - <c.y.file.file> [<c.y.s>..<c.y.end>]");
+	}
+}
+

@@ -16,10 +16,10 @@ public fileMatrix CreateFileMatrix(map[loc, list[str]] files)
 	fileMatrix mat = ();
 
 	// Iterate the files and compare them
-	for(first <- files) {
+	for (first <- files) {
 		// We are not interested in A compared to B AND B compared to A
 		// Keep the map asymmetric
-		for(second <- [file | file <- files, <file, first> notin mat]) {
+		for (second <- [file | file <- files, <file, first> notin mat]) {
 			// Add the comparison to <first, second> -> Matrix
 			// We pass the actual code here for the comparison in CreateLineMatrix
 			mat[<first, second>] = CreateLineMatrix(files[first], files[second]);
@@ -49,4 +49,22 @@ private LineMatrix CreateLineMatrix(list[str] slocFirst, list[str] slocSecond)
 	}
 	
 	return mat;
+}
+
+/**
+ * Function to pretty print a file matrix 
+ * @param 	FileMatrix to print
+ */
+public void printFileMatrix(fileMatrix matrix)
+{
+	for (fp <- matrix) {
+		println("<fp.first.file> vs <fp.second.file>");
+		for (row <- matrix[fp])	{
+			str output = "";
+			for (col <- row) {
+				output += col ? "*" : "-";
+			}
+			println(output);
+		}
+	}		
 }
