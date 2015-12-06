@@ -1,4 +1,4 @@
-module Preprocessing::Text::Unittests
+module Preprocessing::Text::VolumeTests
 
 // Model
 import lang::java::jdt::m3::Core;
@@ -30,10 +30,6 @@ test bool MixedComments()
 {
 	return linesInFile("MixedComments.java") == 38;
 }
-
-
-
-
 
 int linesInFile(str fileName)
 {

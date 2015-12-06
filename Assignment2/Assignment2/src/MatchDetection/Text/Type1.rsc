@@ -1,58 +1,105 @@
 module MatchDetection::Text::Type1
 
-// Model
-import lang::java::jdt::m3::AST;
-import lang::java::jdt::m3::Core;
-
-// General
+// General imports
 import IO;
 import List;
-import Set;
-import String;
+
+// Project imports
+import Diagonal;
+
+// Aliases Type Clones
+alias t1Pair  = tuple[loc file, int s, int end];
+alias t1clone = tuple[t1Pair x, t1Pair y];
 
 /**
- * Calculates the duplication in a project
+ * Function that returns all the T1 clones of size >= threshold
+ * @param	The threshold for the size
+ * @param	The diagonals which contain duplications
+ * @return	A list of all the type1 clones
  */
-public int CalculateDuplication(map[loc, list[str]] l)
-{
-	// We get a map of file to the lines in that file. 
-	// In order to be able to uniquely define lines later on, we need the combination
-	// <loc,line number>
-	// so map[loc, lrel[loc, int, str]] 
-	map[loc, lrel[loc, int, str]] lines = (k : [<k, I, l[k][I]> | I <- [0..size(l[k])]] | k <- l);
-	
-	// Now we create a list of blocks of 6 subsequent lines in all files. 
-	// As a group of 6 lines that appears (without alterations) in more than one place is a duplicate
-	allBlocksOf6 = [*[take(6, lines[k][block..]) | block <- [0..size(lines[k]) - 6]] | k <- lines];
-	
-	// Use the getDuplicates function to get all 6 line blocks which occur multiple times in the input
-	// we only check the str part of the lines in the blocks.
-	duplicates = getDuplicates(allBlocksOf6);	
-	
-	// We now have a list of duplicate blocks. We flatten it to make a set of <file, line number> tuples
-	// to get all unique duplicate lines
-	return size({ *[ <f, li> | <f,li,_> <- block] | block <- duplicates });
-}
+public list[t1clone] GetT1Clone(int threshold, Diagonals diagonals) = 
+	[*GetT1ClonesInLine(threshold, diagonal) | diagonal <- diagonals];
 
 /**
- * Filter a list of lrel[int, str] and return only the elements
- * of which the str part occurs multiple times in the list
+ * This function will retrieve all type1 clones from a diagonal
+ * @param	The minimum size the clones should have
+ * @param	The duplicate diagonal
+ * @return	A list of all the type 1 clones
+ * \todo: Problems if not(threshold >= 1)
  */
-set[lrel[loc, int, str]] getDuplicates(list[lrel[loc f, int l, str c]] l)
+private list[t1clone] GetT1ClonesInLine(int threshold, list[duplicateLine] diagonal)
 {
-	if(isEmpty(l)) 
+	if (size(diagonal) < threshold)
 		return [];
 	
-	set[lrel[loc, int, str]] duplicates = {};
+	clones = [];	
+	diagonalLength = size(diagonal);	
+	cloneStart = 0;
 	
-	for(I <- [0..size(l)-1])
-	{
-		Head = l[I];
-		Tail = l[I+1..];
+	// Iterate over all the items in the diagonal line of the 'duplication matrix'
+	// We use indexes here because we need to look forward in the list
+	for (i <- [0..diagonalLength]) {
+		duplicateLine current = diagonal[i];
 		
-		dupes = { x | x <- Tail, x.c == Head.c};
-		if(!isEmpty(dupes))
-			duplicates += {Head} + dupes;
+		// If we are not at the end of the diagonal we can look ahead
+		if (i < diagonalLength - 1) {				
+			// Check if the next line is a 'continuation' of the current clone
+			// If it is not, we have found the end of the current clone.			
+			next = diagonal[i + 1];			
+			if (!succeedingLines(current, next)) {
+				// If the current clone is long enough, store it as a clone
+				if (i - cloneStart >= threshold - 1) 
+					clones += createClone(diagonal, cloneStart, i);
+				
+				// The next line will be the start of the next (possible) clone
+				cloneStart = i + 1;
+			}
+		}
+		// If we are at the end of the diagonal
+		else if (i > 0) {
+			// Check to see if the current line is a continuation of the previous line. 
+			// If it is, the last line is also the end of the current clone.
+			previous = diagonal[i - 1];
+			if(succeedingLines(previous, current) && (i - cloneStart >= threshold - 1))	
+				clones += createClone(diagonal, cloneStart, i);
+		}	
 	}
-	return duplicates;
+	return clones;
 }
+
+/**
+ * Checks if the next duplicate is on the next line of both files
+ * @param	First duplicate line (File a : 13, File b : 14)
+ * @param	Second duplicate line (File a : 13, File b : 14)
+ * @return	True if the second duplicate succeeds the first
+ *			False on everything else
+ */
+private bool succeedingLines(duplicateLine first, duplicateLine second) =
+	first.x.lineNr + 1 == second.x.lineNr && first.y.lineNr + 1 == second.y.lineNr; 
+
+/**
+ * Function that creates a t1clone using the start and end index of a diagonal
+ * @param	The diagonal that is used to create the t1clone
+ * @param	The start index
+ * @param	The end index
+ * @return	The type1 clone created from the diagonal
+ * \todo: This does not hold for out of bound
+ */
+private t1clone createClone(list[duplicateLine] diagonal, int startIndex, int endIndex)
+{
+	s = diagonal[startIndex];
+	e = diagonal[endIndex];
+	return <<s.x.file, s.x.lineNr, e.x.lineNr>,<s.y.file, s.y.lineNr, e.y.lineNr>>;
+}
+
+/**
+ * Function that 'pretty prints' a list of type1 clones
+ * @param	The list of type1 clones to be printed 
+ */
+public void PrintT1Clones(list[t1clone] t1clones)
+{
+	for (c <- t1clones) {
+		println("<c.x.file.file> [<c.x.s>..<c.x.end>] - <c.y.file.file> [<c.y.s>..<c.y.end>]");
+	}
+}
+

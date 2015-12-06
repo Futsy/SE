@@ -16,7 +16,7 @@ import String;
 import Preprocessing::Text::Volume;
 import Matrix;
 import Diagonal;
-import Type1;
+import MatchDetection::Text::Type1;
 
 // Locations of projects for convenience (could just enter a path)
 public loc testProject  = |project://testProject|;
@@ -44,8 +44,7 @@ public void ReportDuplicates(loc project)
 	// Now we obtain the diagonals from the matrices
 	Diagonals diagonals = CheckDiagonals(matrix);
 	
-	//
-	//t1clones = GetT1Clone(6, diagonals);
+	// t1clones = GetT1Clone(6, diagonals);
 	//iprintln(t1clones);
 	////println(size(clones));
 	//
