@@ -1,5 +1,10 @@
 module Matrix
 
+// General imports
+import IO;
+import List;
+import String;
+
 // Aliases Matrix
 alias LineMatrix 	= list[list[bool]];	
 alias filePair 		= tuple[loc first, loc second];				
@@ -15,16 +20,26 @@ public fileMatrix CreateFileMatrix(map[loc, list[str]] files)
 {
 	fileMatrix mat = ();
 
+	map[loc, list[int]] hashed = ();
+	for (first <- files) {
+		hashed[first] = [Hash(line) | line <- files[first]];
+	}
+	
 	// Iterate the files and compare them
 	for (first <- files) {
 		// We are not interested in A compared to B AND B compared to A
 		// Keep the map asymmetric
-		for (second <- [file | file <- files, <file, first> notin mat]) {
+		//for (second <- [file | file <- files, <file, first> notin mat]) {
+		for (second <- files) {
+			if (<second, first> in mat)
+				continue;
+		
 			// Add the comparison to <first, second> -> Matrix
 			// We pass the actual code here for the comparison in CreateLineMatrix
-			mat[<first, second>] = CreateLineMatrix(files[first], files[second]);
+			mat[<first, second>] = CreateLineMatrix(hashed[first], hashed[second]);
 		}
 	}
+	//printFileMatrix(mat);
 	return mat;
 }
 
@@ -36,20 +51,30 @@ public fileMatrix CreateFileMatrix(map[loc, list[str]] files)
  *			this works as Row, Columns (Not X, Y)
  * \todo: This needs some real performance
  */
-private LineMatrix CreateLineMatrix(list[str] slocFirst, list[str] slocSecond)
+private LineMatrix CreateLineMatrix(list[int] slocFirst, list[int] slocSecond)
 {
 	mat = [];
 	
 	for (lineX <- slocFirst) {
-		list[bool] row = [];
-		for (lineY <- slocSecond) {
-			row += lineX == lineY;
-		}
-		mat += [row];
+		mat += [[lineX == lineY | lineY <- slocSecond]];
 	}
 	
 	return mat;
 }
+
+/**
+ * Function that hashes a string
+ * @param	The input string
+ * @return	Hashed value
+ */
+ private int Hash(str input)
+ {
+ 	int hash = 7;
+ 	for (i <- [0..size(input)]) {
+ 		hash = hash * 33 + charAt(input, i);
+ 	}
+ 	return hash;
+ }
 
 /**
  * Function to pretty print a file matrix 
@@ -66,5 +91,5 @@ public void printFileMatrix(fileMatrix matrix)
 			}
 			println(output);
 		}
-	}		
+	}
 }
