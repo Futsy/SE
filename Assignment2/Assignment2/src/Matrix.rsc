@@ -51,7 +51,7 @@ public fileMatrix CreateFileMatrix(map[loc, list[str]] files)
  *			this works as Row, Columns (Not X, Y)
  * \todo: This needs some real performance
  */
-private LineMatrix CreateLineMatrix(list[int] slocFirst, list[int] slocSecond)
+public LineMatrix CreateLineMatrix(list[value] slocFirst, list[value] slocSecond)
 {
 	mat = [];
 	

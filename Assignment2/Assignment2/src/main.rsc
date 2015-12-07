@@ -34,16 +34,29 @@ public void ReportDuplicates(loc project)
 	println("Obtaining files");
 	set[loc] files = files(createM3FromEclipseProject(project));
 	
-	// Create a comparison map from file to file giving a matrix of duplications (bools)
-	println("Creating matrix");
-	fileMatrix matrix = CreateFileMatrix(LinesOfCode(files));
+	// Process all source lines
+	sourceLines = LinesOfCode(files);
 	
-	// Now we obtain the diagonals from the matrices
-	Diagonals diagonals = CheckDiagonals(matrix);
+	// Make a list of file pair to compare:
+	list[tuple[loc x, loc y]] filesToCompare = [];
+	for(f1 <- files)
+	{
+		for(f2 <- files)
+		{
+			if (<f2,f1> notin filesToCompare)
+				filesToCompare += <f1,f2>;
+		}
+	}
 	
-	// t1clones = GetT1Clone(6, diagonals);
-	//iprintln(t1clones);
-	////println(size(clones));
-	//
-	//iprintln(GetT3Clones(10, t1clones));
+	for(filePair <- filesToCompare)
+	{
+		// Create Matrix for this filepair
+		mat = CreateLineMatrix(sourceLines[filePair.x], sourceLines[filePair.y]);
+		// Get diagonals from this filepair
+		diagonals = GetDiagonals(filePair.x, filePair.y, size(mat[0]), size(mat), mat);
+		// Get clones 
+		t1clones = GetT1Clone(6, diagonals);
+		
+		PrintT1Clones(t1clones);
+	}
 }

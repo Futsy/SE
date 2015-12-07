@@ -46,7 +46,7 @@ public Diagonals CheckDiagonals(fileMatrix matrix)
  * @param	The comparison matrix (list[list[bool]])
  * @return	All diagonals, which are lists of <<loc, int>, <loc, int>>
  */
-private Diagonals GetDiagonals(loc first, loc second, int width, int height, LineMatrix matrix)
+public Diagonals GetDiagonals(loc first, loc second, int width, int height, LineMatrix matrix)
 {
 	Diagonals diagonals = [];
 	
