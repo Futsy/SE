@@ -6,10 +6,37 @@ import List;
 
 // Project imports
 import Diagonal;
+import Preprocessing::Text::Matrix;
+import MatchDetection::Text::Relations;
 
 // Aliases Type Clones
 alias t1Pair  = tuple[loc file, int s, int end];
 alias t1clone = tuple[t1Pair x, t1Pair y];
+
+/**
+ * Function that convers clones in relation form to list of clone objects
+ * @param	The two files that were the basis for the clone detection
+ * @return	A list of clones
+ */
+private list[t1clone] relToClones(filePair fp, crel clones) = 
+	[ <<fp.first, x1, x2>,<fp.second, y1, y2>> | <<x1,y1>,<x2,y2>> <- clones ];
+
+
+public tuple[list[t1clone] t1, list[t1clone] t3] GetClones(filePair fp, LineMatrix mat, int minimumLengthT1, int minSubLengthT3, int maxHolet3)
+{
+	crel t1rel = GetT1Relations(mat, fp.first == fp.second);
+	crel t1clones = GetT1Clones(t1rel, minimumLengthT1);
+	
+	// convert releation to clones
+	list[t1clone] t1Clones = relToClones(fp, t1clones);
+	
+	t2SubRelations = GetT3SubRelation(t1rel, minSubLengthT3);
+	t3Relations = GetT3Relations(t2SubRelations, minSubLengthT3, maxHolet3);
+	t3cloneRelation = GetT3Clones(t3Relations, t1rel);
+	t3Clones = relToClones(fp, t3cloneRelation);
+	return <t1Clones, t3Clones>;
+}
+
 
 /**
  * Function that returns all the T1 clones of size >= threshold

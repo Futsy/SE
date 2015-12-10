@@ -1,4 +1,4 @@
-module Matrix
+module Preprocessing::Text::Matrix
 
 // General imports
 import IO;

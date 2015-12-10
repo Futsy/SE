@@ -6,7 +6,7 @@ import List;
 import util::Math;
 
 // Project imports
-import Matrix;
+import Preprocessing::Text::Matrix;
 
 // Aliases Diagonals
 alias fileLine 		= tuple[loc file, int lineNr];

@@ -1,6 +1,6 @@
-module playing::Relations
+module MatchDetection::Text::Relations
 
-import Matrix;
+import Preprocessing::Text::Matrix;
 
 import List;
 import Relation;
@@ -12,34 +12,19 @@ import String;
 alias coord = tuple[int,int];
 alias crel = rel[coord,coord];
 
-public list[str] smat = [
-	"x - - - - - - - -",
-	"- - - - - - - - -",
-	"- x - - - - - - -",
-	"- - x - - - - - -",
-	"- - - x - - - - -",
-	"- - - - - - - x -",
-	"- - - - - - - - x",
-	"- - - - x - - - -",
-	"- - - - - x - - -"];
-	
-public LineMatrix StringsToLineMat(list[str] lines) = 
-		[[ c == "x" | c <- split(" ", line) ] | line <- lines];
 
-
-public LineMatrix mat = StringsToLineMat(smat);
 
 /* A coordinate in the matrix <x,y> represents a line in file x and a line in file y
  * a 'true' in the matrix means that the two lines match. This function iterates the
  * matrix searching for cells for which both <x,y> and <x+1,y+1> match. All these pairs
  * are returned in a relation. 
  */
-public crel GetT1Relations(LineMatrix m)
+public crel GetT1Relations(LineMatrix m, bool mirror)
 {
 	height = size(m)-1;
 	width = size(m[0])-1;
 	
-	return { <<x,y>,<x+1,y+1>> | x <- [0..width], y <- [0..height], m[y][x] && m[y+1][x+1] };
+	return { <<x,y>,<x+1,y+1>> | x <- [0..width], y <- [0..height], m[y][x] && m[y+1][x+1], x < y || !mirror };
 }
 
 /* Determine clones from a type1 relation. */
@@ -117,10 +102,3 @@ crel GetT3Clones(crel t3Relation, crel t1Rel)
 	// We do filter on the clone not being part of a t1 clone since we do not want duplicate duplicates.
 	return { <<x1,y1>,<x2,y2>> | <x1,y1> <- entries, <x2,y2> <- exits, <<x1,y1>,<x2,y2>> in t3tclosure && <<x1,y1>,<x2,y2>> notin t1tclosure };
 }
-
-
-
-public crel t1rel = GetT1Relations(mat);
-public crel t1clones = GetT1Clones(t1rel, 4);
-public crel t3Relations = GetT3Relations(t1rel, 2, 3);
-public crel t3Clones = GetT3Clones(t3Relations, t1rel);
