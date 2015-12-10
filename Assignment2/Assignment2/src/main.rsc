@@ -52,20 +52,41 @@ public void ReportDuplicates(loc project)
 	
 	rel[loc, t1clone] fileRel = {};
 	
+	t1clones = [];
+	t3clones = [];
+	
 	for(filePair <- filesToCompare)
 	{
 		// Create Matrix for this filepair
 		mat = CreateLineMatrix(sourceLines[filePair.x], sourceLines[filePair.y]);
 
 		// Get clones 
-		<t1clones, t3clones> = GetClones(filePair, mat, 6, 4, 2);
-
-		// Add the clones to the other file (inverse for files)
-		inverted = [ <y,x> | <x,y> <- t1clones];
+		<t1clonesTmp, t3clonesTmp> = GetClones(filePair, mat, 6, 4, 2);
 		
-		fileRel += { <clone.x.file, clone> | clone <- (t1clones+inverted) };
-		PrintT1Clones(t1clones);
+		// Add them to list
+		t1clones += t1clonesTmp;
+		t3clones += t3clonesTmp;
+		
+		if(size(t1clonesTmp) > 0)
+		{
+			println("Type 1:");
+			PrintT1Clones(t1clonesTmp);
+		}
+		
+		if(size(t3clonesTmp) > 0)
+		{
+			println("Type 3:");
+			PrintT1Clones(t3clonesTmp);
+		}
 	}
 	
+	// Add the inverse of the clones 
+	t1clones += [ <y,x> | <x,y> <- t1clones];
+	t3clones += [ <y,x> | <x,y> <- t3clones];
+	
+	// Create a relation file to clones in that file
+	fileRel += { <clone.x.file, clone> | clone <- (t1clones ++ t3clones) };
+	
+	// Use that relation to create a json file for visualization
 	CreateJson(fileRel, LinesOfCodeWithSpaces(files));
 }

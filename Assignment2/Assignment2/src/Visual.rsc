@@ -40,7 +40,7 @@ public void CreateJson(rel[loc, t1clone] clones, map[loc,list[str]] lines)
 			for (ln <- lines[fst][link.x.s .. link.x.end + 1])
 				fileACode += ln + "\<br\>";
 			
-			appendToFile(project, "\"fileACode\":\"" + replaceAll(fileACode, "\"", "\\\"") + "\",\n\r");
+			appendToFile(project, "\"fileACode\":\"" + replaceAll(replaceAll(fileACode, "\"", "\\\""), "\t", "   ") + "\",\n\r");
 			
 			appendToFile(project, "\"cloneType\":1,\n\r");
 			
@@ -48,7 +48,7 @@ public void CreateJson(rel[loc, t1clone] clones, map[loc,list[str]] lines)
 			for (ln <- lines[link.y.file][link.y.s .. link.y.end + 1])
 				fileBCode += ln + "\<br\>";
 			
-			appendToFile(project, "\"cloneCode\":\"" + replaceAll(fileBCode, "\"", "\\\"") + "\",\n\r");
+			appendToFile(project, "\"cloneCode\":\"" + replaceAll(replaceAll(fileBCode, "\"", "\\\""), "\t", "   ") + "\",\n\r");
 			appendToFile(project, "\"cloneName\":\"" + replaceAll(replaceAll(link.y.file.path, ".java", ""), "/", ".") + "\"\n\r");
 			
 			appendToFile(project, "}\n\r");
