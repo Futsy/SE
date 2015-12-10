@@ -17,8 +17,10 @@ import Preprocessing::Text::Volume;
 import Matrix;
 import Diagonal;
 import MatchDetection::Text::Type1;
+import Visual;
 
 // Locations of projects for convenience (could just enter a path)
+public loc multiTest	= |project://TestClonesMultiFileMultiClone2|;
 public loc testProject  = |project://testProject|;
 public loc smallProject = |project://smallsql0.21_src|;
 public loc largeProject = |project://hsqldb-2.3.1|;
@@ -32,7 +34,8 @@ public void ReportDuplicates(loc project)
 {
 	// Get all the files in the project
 	println("Obtaining files");
-	set[loc] files = files(createM3FromEclipseProject(project));
+	model = createM3FromEclipseProject(project);
+	set[loc] files = files(model);
 	
 	// Process all source lines
 	sourceLines = LinesOfCode(files);
@@ -48,6 +51,7 @@ public void ReportDuplicates(loc project)
 		}
 	}
 	
+	rel[loc, loc] fileRel = {};
 	for(filePair <- filesToCompare)
 	{
 		// Create Matrix for this filepair
@@ -57,6 +61,8 @@ public void ReportDuplicates(loc project)
 		// Get clones 
 		t1clones = GetT1Clone(6, diagonals);
 		
+		fileRel += { <clone.x.file, clone.y.file> | clone <- t1clones };
 		PrintT1Clones(t1clones);
 	}
+	CreateJson(fileRel, model);
 }
