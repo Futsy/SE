@@ -34,9 +34,8 @@ public void ReportDuplicates(loc project)
 {
 	// Get all the files in the project
 	println("Obtaining files");
-	model = createM3FromEclipseProject(project);
-	set[loc] files = files(model);
-	
+	set[loc] files = files(createM3FromEclipseProject(project));
+		
 	// Process all source lines
 	sourceLines = LinesOfCode(files);
 	
