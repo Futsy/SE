@@ -10,6 +10,12 @@ import List;
 import String;
 
 /**
+ * Get the SLOC for files without removing space
+ */
+public map[loc,list[str]] LinesOfCodeWithSpaces(set[loc] parts) 
+	= (part : RemoveSingleLineComments(RemoveMultiLineComments(part)) | part <- parts);
+
+/**
  * Get the SLOC for files
  */
 public map[loc,list[str]] LinesOfCode(set[loc] parts) 

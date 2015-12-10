@@ -1,0 +1,79 @@
+[
+{
+"name":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB",
+"duplicate": [
+{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>public void Car()<br>{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>public void Car()<br>{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+}
+,{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB"
+}
+,{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB"
+}
+,{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+}
+,{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+}
+,{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB"
+}
+,{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+}
+,{
+"fileACode":"public void Foo()<br>{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"public void Foo()<br>{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+}
+],
+"imports":[
+".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassB"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+,".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+]
+}
+,{
+"name":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA",
+"duplicate": [
+{
+"fileACode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneType":1,
+"cloneCode":"{<br>int a;<br>int b;<br>int c;<br>int d;<br>int e;<br>int f;<br>}<br>",
+"cloneName":".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+}
+],
+"imports":[
+".F:.eclipse.workspace.SE.Assignment2.TestClonesMultiFileMultiClone2.src.pacakge.ClassA"
+]
+}
+]
