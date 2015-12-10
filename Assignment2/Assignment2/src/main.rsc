@@ -51,7 +51,7 @@ public void ReportDuplicates(loc project)
 		}
 	}
 	
-	rel[loc, loc] fileRel = {};
+	rel[loc, t1clone] fileRel = {};
 	for(filePair <- filesToCompare)
 	{
 		// Create Matrix for this filepair
@@ -61,8 +61,10 @@ public void ReportDuplicates(loc project)
 		// Get clones 
 		t1clones = GetT1Clone(6, diagonals);
 		
-		fileRel += { <clone.x.file, clone.y.file> | clone <- t1clones };
-		PrintT1Clones(t1clones);
+		//\todo: Add the clones to the other file (inverse for files)
+		fileRel += { <clone.x.file, clone> | clone <- t1clones };
+		//PrintT1Clones(t1clones);
 	}
-	CreateJson(fileRel, model);
+	
+	CreateJson(fileRel, LinesOfCodeWithSpaces(files));
 }

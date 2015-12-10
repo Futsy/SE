@@ -151,7 +151,7 @@ d3.json("input.json", function(error, classes) {
           var row = d3.select("table").append("tr").attr("id", "rowClassRemove");
 
           row.append("td").text(entry.cloneType);
-          row.append("td").html("<b>" + d.name + "</b><br>" + d.fileACode);
+          row.append("td").html("<b>" + d.name + "</b><br>" + entry.fileACode);
           row.append("td").html("<b>" + entry.cloneName + "</b><br>" + entry.cloneCode);
           
         });
