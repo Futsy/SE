@@ -51,29 +51,19 @@ public void ReportDuplicates(loc project)
 	}
 	
 	rel[loc, t1clone] fileRel = {};
+	
 	for(filePair <- filesToCompare)
 	{
 		// Create Matrix for this filepair
 		mat = CreateLineMatrix(sourceLines[filePair.x], sourceLines[filePair.y]);
-		// Get diagonals from this filepair
-		diagonals = GetDiagonals(filePair.x, filePair.y, size(mat[0]), size(mat), mat);
-		// Get clones 
-		//t1clones = GetT1Clone(6, diagonals);
-		<t1clones, t3clones> = GetClones(filePair, mat, 6, 4, 2);
-		
-		//if(size(t1clones) != 0)
-		//{
-		//	println("t1");
-		//	PrintT1Clones(t1clones);
-		//}
-		//if(size(t3clones) != 0)
-		//{
-		//	println("t3");
-		//	PrintT1Clones(t3clones);
-		//}
 
-		//\todo: Add the clones to the other file (inverse for files)
-		fileRel += { <clone.x.file, clone> | clone <- t1clones };
+		// Get clones 
+		<t1clones, t3clones> = GetClones(filePair, mat, 6, 4, 2);
+
+		// Add the clones to the other file (inverse for files)
+		inverted = [ <y,x> | <x,y> <- t1clones];
+		
+		fileRel += { <clone.x.file, clone> | clone <- (t1clones+inverted) };
 		PrintT1Clones(t1clones);
 	}
 	

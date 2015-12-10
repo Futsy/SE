@@ -19,16 +19,18 @@ alias t1clone = tuple[t1Pair x, t1Pair y];
  * @return	A list of clones
  */
 private list[t1clone] relToClones(filePair fp, crel clones) = 
-	[ <<fp.first, x1, x2>,<fp.second, y1, y2>> | <<x1,y1>,<x2,y2>> <- clones ];
+	[ <<fp.first, y1, y2>,<fp.second, x1, x2>> | <<x1,y1>,<x2,y2>> <- clones ];
 
 
 public tuple[list[t1clone] t1, list[t1clone] t3] GetClones(filePair fp, LineMatrix mat, int minimumLengthT1, int minSubLengthT3, int maxHolet3)
 {
 	crel t1rel = GetT1Relations(mat, fp.first == fp.second);
-	crel t1clones = GetT1Clones(t1rel, minimumLengthT1);
+	crel t1clonesAsRel = GetT1Clones(t1rel, minimumLengthT1);
 	
 	// convert releation to clones
-	list[t1clone] t1Clones = relToClones(fp, t1clones);
+	list[t1clone] t1Clones = relToClones(fp, t1clonesAsRel);
+	
+	return <t1Clones, []>;
 	
 	t2SubRelations = GetT3SubRelation(t1rel, minSubLengthT3);
 	t3Relations = GetT3Relations(t2SubRelations, minSubLengthT3, maxHolet3);

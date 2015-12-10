@@ -220,3 +220,224 @@ test bool T3SubRelationCreationNonExactMatchMulti()
 		<<3,1>,<5,3>>,<<4,2>,<6,4>>
 		};
 }
+
+test bool T3RelationCreationNoT3()
+{
+	list[str] matrixAsString = [
+	"- - - - - - - - -",
+	"x - - - - - - - -",
+	"- x - - - - - - -",
+	"- - x - - - - - -",
+	"- - - x - - - - -",
+	"- - - - x - - - -",
+	"- - - - - x - - -",
+	"- - - - - - x - -",
+	"- - - - - - - - -"];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	t3rel = GetT3Relations(t1rel,3, 2);
+	
+	
+	return GetT3Clones(t3rel, t1rel) == {};
+}
+
+test bool T3RelationCreationSingleT3Diagonal()
+{
+	list[str] matrixAsString = [
+	"- - - - - - - - -",
+	"x - - - - - - - -",
+	"- x - - - - - - -",
+	"- - x - - - - - -",
+	"- - - - - - - - -",
+	"- - - - x - - - -",
+	"- - - - - x - - -",
+	"- - - - - - x - -",
+	"- - - - - - - - -"];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	
+	// Minimum t3 sub-clone size = 3 and max hole =1. This should give one t3 clone
+	t3rel = GetT3Relations(t1rel,3, 1);	
+	valid1 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<6,7>>};
+	
+	// Minimum t3 sub-clone size = 3 and max hole =2. This should give one t3 clone
+	t3rel = GetT3Relations(t1rel,3, 2);	
+	valid2 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<6,7>>};
+	
+	// Minimum t3 sub-clone size = 3 and max hole =0. This should give no clones
+	t3rel = GetT3Relations(t1rel,3, 0);	
+	valid3 =  GetT3Clones(t3rel, t1rel) == {};
+	
+	// Minimum t3 sub-clone size = 4 and max hole = 1. This should give no clones
+	t3rel = GetT3Relations(t1rel,4, 1);	
+	valid4 =  GetT3Clones(t3rel, t1rel) == {};
+	
+	return valid1 && valid2 && valid3 && valid4;
+}
+
+test bool T3RelationCreationSingleT3Horizontal()
+{
+	list[str] matrixAsString = [
+	"- - - - - - - - -",
+	"x - - - - - - - -",
+	"- x - - - - - - -",
+	"- - x - - - - - -",
+	"- - - - x - - - -",
+	"- - - - - x - - -",
+	"- - - - - - x - -",
+	"- - - - - - - - -",
+	"- - - - - - - - -"];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	
+	// Minimum t3 sub-clone size = 3 and max hole =1. This should give one t3 clone
+	t3rel = GetT3Relations(t1rel,3, 1);	
+	valid1 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<6,6>>};
+	
+	// Minimum t3 sub-clone size = 3 and max hole =2. This should give one t3 clone
+	t3rel = GetT3Relations(t1rel,3, 2);	
+	valid2 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<6,6>>};
+	
+	// Minimum t3 sub-clone size = 3 and max hole =0. This should give no clones
+	t3rel = GetT3Relations(t1rel,3, 0);	
+	valid3 =  GetT3Clones(t3rel, t1rel) == {};
+	
+	// Minimum t3 sub-clone size = 4 and max hole = 1. This should give no clones
+	t3rel = GetT3Relations(t1rel,4, 1);	
+	valid4 =  GetT3Clones(t3rel, t1rel) == {};
+	
+	return valid1 && valid2 && valid3 && valid4;
+}
+
+test bool T3RelationCreationSingleT3Vertial()
+{
+	list[str] matrixAsString = [
+	"- - - - - - - - -",
+	"x - - - - - - - -",
+	"- x - - - - - - -",
+	"- - x - - - - - -",
+	"- - - - - - - - -",
+	"- - - x - - - - -",
+	"- - - - x - - - -",
+	"- - - - - x - - -",
+	"- - - - - - - - -"];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	
+	// Minimum t3 sub-clone size = 3 and max hole =1. This should give one t3 clone
+	t3rel = GetT3Relations(t1rel,3, 1);	
+	valid1 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<5,7>>};
+	
+	// Minimum t3 sub-clone size = 3 and max hole =2. This should give one t3 clone
+	t3rel = GetT3Relations(t1rel,3, 2);	
+	valid2 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<5,7>>};
+	
+	// Minimum t3 sub-clone size = 3 and max hole =0. This should give no clones
+	t3rel = GetT3Relations(t1rel,3, 0);	
+	valid3 =  GetT3Clones(t3rel, t1rel) == {};
+	
+	// Minimum t3 sub-clone size = 4 and max hole = 1. This should give no clones
+	t3rel = GetT3Relations(t1rel,4, 1);	
+	valid4 =  GetT3Clones(t3rel, t1rel) == {};
+	
+	return valid1 && valid2 && valid3 && valid4;
+}
+
+test bool T3RelationCreationMiltipleT3()
+{
+	list[str] matrixAsString = [
+	"- - - - - - - - - -",
+	"x - - - - - - - - -",
+	"- x - - - - - - - -",
+	"- - x - - - - - - -",
+	"- - - - - - - x - -",
+	"- - - - - - - - x -",
+	"- - - - - x - - - x",
+	"- - - x - - x - - -",
+	"- - - - x - - x - -",
+	"- - - - - x - - - -"];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	
+	// maximum hole = 1 --> No t3 clones
+	t3rel = GetT3Relations(t1rel,3, 1);	
+	valid1 =  GetT3Clones(t3rel, t1rel) == {};
+		
+	// maximum hole = 2 --> 
+	// subCloneStart -> subClonediagnoal
+	t3rel = GetT3Relations(t1rel,3, 2);	
+	valid2 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<7,8>>};
+	
+	// maximum hole = 3 --> 
+	// subCloneStart -> subCloneVertical + subCloneStart -> subClonediagnoal
+	t3rel = GetT3Relations(t1rel,3, 3);	
+	valid3 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<5,9>>, <<0,1>,<7,8>>};
+	
+	// maximum hole = 4 --> 
+	// subCloneStart -> subCloneVertical + subCloneStart -> subClonediagnoal + subCloneStart -> subClonediagnoal
+	t3rel = GetT3Relations(t1rel,3, 4);	
+	valid4 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<5,9>>, <<0,1>,<7,8>>, <<0,1>,<9,6>>};
+	
+	println(GetT3Clones(t3rel, t1rel));
+	
+	return valid1 && valid2 && valid3 && valid4;
+}
+
+test bool T3RelationSingleChainedT3()
+{
+	list[str] matrixAsString = [
+	"x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - x - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - x - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - x - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - x - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - x - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - x - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - x - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - - - - - - x - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - - - - - - - x - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - - - - - - - - x - - - - - - - - -"
+	];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	t3rel = GetT3Relations(t1rel,2, 4);	
+	
+	return  GetT3Clones(t3rel, t1rel) == {<<0,0>,<27,17>>};	
+}
+
+test bool T3RelationMultipleChainedT3()
+{
+	list[str] matrixAsString = [
+	"x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - x - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - x - - - - x - - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - x - - - - x - - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - x - - - - x - - - - - - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - x - - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - - - - - - - - - x - - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - - x - - - - - - - - x - - - - - - - - - - - - - - - - -",
+	"- - - - - - - - x - - x - - - - - - - - x - - - - - - - - - - - - - - - -",
+	"- - - - - - - - - x - - x - - - - - - - - - - - - x - - - - - - - - - - -",
+	"- - - - - - - - - - x - - x - - - - - - - - - - - - x - - - - - - - - - -",
+	"- - - - - - - - - - - x - - - - - - - - - - - - - - - x - - - - - - - - -"
+	];
+	
+	t1rel = GetT1Relations(StringsToLineMat(matrixAsString), false);	
+	t3rel = GetT3Relations(t1rel,2, 4);	
+	
+	return  GetT3Clones(t3rel, t1rel) == {<<0,0>,<27,17>>, <<0,0>,<11,17>>, <<0,0>,<13,16>>};	
+}
+
