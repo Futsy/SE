@@ -6,6 +6,7 @@ import lang::java::jdt::m3::Core;
 // General
 import IO;
 import List;
+import Map;
 import Relation;
 import Set;
 import String;
@@ -14,71 +15,132 @@ import MatchDetection::Text::Type1;
 
 /**
  * Function that creates the json output
+ * @param	All the clones per file (t1 and t3)
+ * @param	All lines of code per file
  */
 public void CreateJson(rel[loc, t1clone] clones, map[loc,list[str]] lines)
 {
 	loc project = |project://Assignment2/output/input.json|;
-	writeFile(project, "[\n\r");
+	writeFile(project, NewLine("["));
+	
+	OutputNonDuplicates(project, domain(lines) - domain(clones));
 	
 	int i = 0;
 	for (fst <- domain(clones)) {
-		// Add the opening tag
-		appendToFile(project, "{\n\r");
+		mapsTo = clones[fst];		
+
+		appendToFile(project, NewLine("{"));
+		appendToFile(project, NewLine("\"name\":\"" + FixPathing(fst.path) + "\","));
+		CreateDuplicateObjects(project, lines, mapsTo);
+		CreateImportObjects(project, mapsTo);
+		appendToFile(project, SelfDuplicate(mapsTo));
+		appendToFile(project, NewLine("}"));
 		
-		// Add the name
-		appendToFile(project, "\"name\":\"" + replaceAll(replaceAll(fst.path, ".java", ""), "/", ".") + "\",\n\r");
-		
-		// Add the code that is a duplicate
-		mapsTo = clones[fst];
-		appendToFile(project, "\"duplicate\": [\r\n");
-		int k = 0;
-		for (link <- mapsTo) {
-			appendToFile(project, "{\n\r");
-			
-			// Add the code from this file
-			str fileACode = "";
-			for (ln <- lines[fst][link.x.s .. link.x.end + 1])
-				fileACode += ln + "\<br\>";
-			
-			appendToFile(project, "\"fileACode\":\"" + replaceAll(replaceAll(fileACode, "\"", "\\\""), "\t", "   ") + "\",\n\r");
-			
-			appendToFile(project, "\"cloneType\":1,\n\r");
-			
-			str fileBCode = "";
-			for (ln <- lines[link.y.file][link.y.s .. link.y.end + 1])
-				fileBCode += ln + "\<br\>";
-			
-			appendToFile(project, "\"cloneCode\":\"" + replaceAll(replaceAll(fileBCode, "\"", "\\\""), "\t", "   ") + "\",\n\r");
-			appendToFile(project, "\"cloneName\":\"" + replaceAll(replaceAll(link.y.file.path, ".java", ""), "/", ".") + "\"\n\r");
-			
-			appendToFile(project, "}\n\r");
-			if (k != size(mapsTo) - 1)
-				appendToFile(project, ",");
-			k += 1;
-			
-		}
-		appendToFile(project, "],\r\n");
-		
-		// Add the imports
-		appendToFile(project, "\"imports\":[\n\r");
-		int j = 0;
-		for (link <- mapsTo) {
-			appendToFile(project, "\"" + replaceAll(replaceAll(link.y.file.path, ".java", ""), "/", ".") + "\"\n\r");
-			
-			if (j != size(mapsTo) - 1)
-				appendToFile(project, ",");
-			j += 1;
-		}
-		appendToFile(project, "]\n\r");
-		
-		// Add the closing bracket and comma for this object
-		appendToFile(project, "}\n\r");
 		
 		if (i != size(domain(clones)) - 1)
 			appendToFile(project, ",");
 		i += 1;
 	}
-		
+
 	// file closing thingy
 	appendToFile(project, "]");
 }
+
+/**
+ * Function that appends a new line
+ * @param 	A string that needs to be prepended
+ * @return	The input string with new line characters behind it
+ */
+private str NewLine(str input)
+	= input + "\n\r";
+ 	
+/**
+ * Function that creates the output for non duplicate files
+ * @param	The json file location
+ * @param	The files which have no duplicates
+ */
+private void OutputNonDuplicates(loc project, set[loc] nonDupeFiles)
+{
+	for (f <- nonDupeFiles) {
+		appendToFile(project, NewLine("{"));
+		appendToFile(project, NewLine("\"name\":\"" + FixPathing(f.path) + "\","));
+		appendToFile(project, NewLine("\"duplicate\": [],"));
+		appendToFile(project, NewLine("\"imports\":[],"));
+		appendToFile(project, NewLine("\"selfLink\": false"));
+		appendToFile(project, NewLine("},"));
+	}
+}
+
+/**
+ * Function that writes all the information about the duplicate
+ * @param	The json file location
+ * @param	All the lines in the project
+ * @param	The list of clones with this file
+ */
+private void CreateDuplicateObjects(loc project, map[loc,list[str]] lines, rel[t1Pair x, t1Pair y] mapsTo)
+{
+	appendToFile(project, NewLine("\"duplicate\": ["));
+	
+	int k = 0;
+	for (link <- mapsTo) {
+		appendToFile(project, NewLine("{"));
+		
+		// Add the code from this file
+		str fileACode = "";
+		for (ln <- lines[link.x.file][link.x.s .. link.x.end + 1])
+			fileACode += ln + "\<br\>";
+		
+		appendToFile(project, NewLine("\"fileACode\":\"" + replaceAll(replaceAll(fileACode, "\"", "\\\""), "\t", "   ") + "\","));
+		
+		appendToFile(project, NewLine("\"cloneType\":1,"));
+		
+		str fileBCode = "";
+		for (ln <- lines[link.y.file][link.y.s .. link.y.end + 1])
+			fileBCode += ln + "\<br\>";
+		
+		appendToFile(project, NewLine("\"cloneCode\":\"" + replaceAll(replaceAll(fileBCode, "\"", "\\\""), "\t", "   ") + "\","));
+		appendToFile(project, NewLine("\"cloneName\":\"" + FixPathing(link.y.file.path) + "\""));
+		
+		appendToFile(project, NewLine("}"));
+		if (k != size(mapsTo) - 1)
+			appendToFile(project, ",");
+		k += 1;
+	}
+	appendToFile(project, NewLine("],"));
+}
+
+/**
+ * Function that adds the imports to the json for a specific file
+ * @param	The json file location
+ * @param	The list of clones with this file
+ */
+private void CreateImportObjects(loc project, rel[t1Pair x, t1Pair y] mapsTo)
+{
+	appendToFile(project, NewLine("\"imports\":["));
+	int j = 0;
+	for (link <- mapsTo) {
+		appendToFile(project, NewLine("\"" + FixPathing(link.y.file.path) + "\""));
+		
+		if (j != size(mapsTo) - 1)
+			appendToFile(project, ",");
+		j += 1;
+	}
+	appendToFile(project, NewLine("],"));
+}
+
+/**
+ * Function that fixes the absolute path
+ * @param 	The path to the file
+ * @return	A more readable verion
+ */
+private str FixPathing(str input)
+	= replaceAll(replaceAll(input, ".java", ""), "/", "."); 
+
+/**
+ * Function that will provide output for the self duplicate
+ * @param	The list of clones with this file
+ * @return	"false" - if not a self duplicate
+ *			"true"  - if it has a duplicate in its own file 
+ */
+private str SelfDuplicate(rel[t1Pair x, t1Pair y] mapsTo)
+	= NewLine("\"selfLink\":" + (size({file | file <- mapsTo, file.y.file == file.x.file}) > 0 ? "true" : "false"));

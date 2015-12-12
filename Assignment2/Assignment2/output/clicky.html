@@ -78,6 +78,11 @@ th {
   stroke: #28a1d5;
 }
 
+.link--self {
+  font-style: italic;
+  font-weight: 700;
+}
+
 </style>
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
@@ -137,6 +142,7 @@ d3.json("input.json", function(error, classes) {
     .enter().append("text")
       .attr("class", "node")
       .attr("dy", ".31em")
+      .classed("link--self", function(d) { return d.selfLink === true; })
       .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
       .style("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .text(function(d) { return d.key; })

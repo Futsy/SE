@@ -84,8 +84,9 @@ public void ReportDuplicates(loc project)
 	t1clones += [ <y,x> | <x,y> <- t1clones];
 	t3clones += [ <y,x> | <x,y> <- t3clones];
 	
+		
 	// Create a relation file to clones in that file
-	fileRel += { <clone.x.file, clone> | clone <- (t1clones ++ t3clones) };
+	fileRel += { <clone.x.file, clone> | clone <- (t1clones + t3clones) };
 	
 	// Use that relation to create a json file for visualization
 	CreateJson(fileRel, LinesOfCodeWithSpaces(files));
