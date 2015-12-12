@@ -82,7 +82,7 @@ crel GetT3Relations(crel t1Relation, int minimalSubSize, int maxHole)
 	/* For each element in the range of the t3subrelations, see if we can find another element with a distance
 	 * within the offsets. If we find one, add a connection between the two elements to the relation.
 	 */
-	return t3SubRel + { <<x,y>,<x+offsetX,y+offsetY>> | <x,y> <- subRelRange, <offsetX,offsetY> <- offsetsToCheck, <x+offsetX,y+offsetY> in subRelDomain };
+	return t1Relation + { <<x,y>,<x+offsetX,y+offsetY>> | <x,y> <- subRelRange, <offsetX,offsetY> <- offsetsToCheck, <x+offsetX,y+offsetY> in subRelDomain };
 }
 
 /* Get a list of t3 clones */

@@ -378,8 +378,6 @@ test bool T3RelationCreationMiltipleT3()
 	t3rel = GetT3Relations(t1rel,3, 4);	
 	valid4 =  GetT3Clones(t3rel, t1rel) == {<<0,1>,<5,9>>, <<0,1>,<7,8>>, <<0,1>,<9,6>>};
 	
-	println(GetT3Clones(t3rel, t1rel));
-	
 	return valid1 && valid2 && valid3 && valid4;
 }
 

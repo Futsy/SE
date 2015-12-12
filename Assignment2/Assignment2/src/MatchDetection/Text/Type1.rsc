@@ -30,10 +30,7 @@ public tuple[list[t1clone] t1, list[t1clone] t3] GetClones(filePair fp, LineMatr
 	// convert releation to clones
 	list[t1clone] t1Clones = relToClones(fp, t1clonesAsRel);
 	
-	//return <t1Clones, []>;
-	
-	t2SubRelations = GetT3SubRelation(t1rel, minSubLengthT3);
-	t3Relations = GetT3Relations(t2SubRelations, minSubLengthT3, maxHolet3);
+	t3Relations = GetT3Relations(t1rel, minSubLengthT3, maxHolet3);
 	t3cloneRelation = GetT3Clones(t3Relations, t1rel);
 	t3Clones = relToClones(fp, t3cloneRelation);
 	return <t1Clones, t3Clones>;
