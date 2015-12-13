@@ -19,6 +19,7 @@ alias crel = rel[coord,coord];
  * matrix searching for cells for which both <x,y> and <x+1,y+1> match. All these pairs
  * are returned in a relation. 
  */
+
 public crel GetT1Relations(LineMatrix m, bool mirror)
 {
 	height = size(m)-1;

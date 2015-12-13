@@ -50,7 +50,7 @@ public void ReportDuplicates(loc project)
 		}
 	}
 	
-	rel[loc, clone] fileRel = {};
+	rel[loc, tuple[clone, int]] fileRel = {};
 	
 	t1clones = [];
 	t3clones = [];
@@ -67,16 +67,14 @@ public void ReportDuplicates(loc project)
 		t1clones += t1clonesTmp;
 		t3clones += t3clonesTmp;
 		
-		if(size(t1clonesTmp) > 0)
-		{
+		if(size(t1clonesTmp) > 0){
 			println("Type 1:");
-			PrintT1Clones(t1clonesTmp);
+			PrintClones(t1clonesTmp);
 		}
 		
-		if(size(t3clonesTmp) > 0)
-		{
+		if(size(t3clonesTmp) > 0){
 			println("Type 3:");
-			PrintT1Clones(t3clonesTmp);
+			PrintClones(t3clonesTmp);
 		}
 	}
 	
@@ -86,7 +84,8 @@ public void ReportDuplicates(loc project)
 	
 		
 	// Create a relation file to clones in that file
-	fileRel += { <clone.x.file, clone> | clone <- (t1clones + t3clones) };
+	fileRel += { <clone.x.file, <clone, 1>> | clone <- (t1clones) };
+	fileRel += { <clone.x.file, <clone, 3>> | clone <- (t3clones) };
 	
 	// Use that relation to create a json file for visualization
 	CreateJson(fileRel, LinesOfCodeWithSpaces(files));
