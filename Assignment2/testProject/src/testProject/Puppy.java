@@ -1,5 +1,5 @@
 package testProject;
-public class Snail {
+public class Puppy {
 	public void Foo() 
 	{
 		int a;
@@ -9,13 +9,7 @@ public class Snail {
 		int e;
 		int f;
 	}
-	public void Unique()
-	{
-		int some;
-		int unique;
-		int variables;
-	}
-	public void Bar() 
+	public void Car() 
 	{
 		int a;
 		int b;
@@ -23,5 +17,5 @@ public class Snail {
 		int d;
 		int e;
 		int f;		
-	}
+	} 
 }

@@ -38,15 +38,24 @@ public class ClassA {
 		}
 	}
 	
-	public void Foo2()
+	public void FooBar()
 	{
-		String a = "This is the";
-		String b = "second clone";
-	}
-	
-	public void Bar2()
-	{
-		String a = "This is the";
-		String b = "second clone";
+		while(e == m * power(c,2))
+		{
+			if(f = m * g)
+			{
+				int a;
+				int b;
+				int c;
+				int d;
+				int e;
+				int f;
+				SomeClass A;
+			}
+			else
+			{
+				throw GravityNotFoundError();
+			}
+		}
 	}
 }
