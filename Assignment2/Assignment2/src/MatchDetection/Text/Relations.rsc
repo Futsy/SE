@@ -66,15 +66,12 @@ crel GetT3Relations(crel t1Relation, int minimalSubSize, int maxHole)
 	 * If max hole is 3, we will check the following coordinates
 	 * o - - - - 
 	 * - - x x x 
-	 * - x x - - 
-	 * - x - x - 
-	 * - x - - x 
+	 * - x x x x 
+	 * - x x x x 
+	 * - x x x x 
 	 */
-	list[int] r = [2..(maxHole+2)];
-	list[coord] xoffsets = [1]*r;
-	list[coord] yoffsets = r*[1];
-	list[coord] crossOffsets = [<x,x> | x <- r];
-	list[coord] offsetsToCheck = xoffsets + yoffsets + crossOffsets;
+	
+	offsetsToCheck = [1..maxHole+2] * [1..maxHole+2] - <1,1>; 
 	
 	subRelRange = range(t3SubRel);
 	subRelDomain = domain(t3SubRel);

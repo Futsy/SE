@@ -16,7 +16,7 @@ import String;
 import Preprocessing::Text::Volume;
 import Preprocessing::Text::Matrix;
 import Diagonal;
-import MatchDetection::Text::Type1;
+import MatchDetection::Text::CloneDetection;
 import Visual;
 
 // Locations of projects for convenience (could just enter a path)
@@ -50,7 +50,7 @@ public void ReportDuplicates(loc project)
 		}
 	}
 	
-	rel[loc, t1clone] fileRel = {};
+	rel[loc, clone] fileRel = {};
 	
 	t1clones = [];
 	t3clones = [];

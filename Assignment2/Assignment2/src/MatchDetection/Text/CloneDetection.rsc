@@ -1,4 +1,4 @@
-module MatchDetection::Text::Type1
+module MatchDetection::Text::CloneDetection
 
 // General imports
 import IO;
@@ -10,25 +10,25 @@ import Preprocessing::Text::Matrix;
 import MatchDetection::Text::Relations;
 
 // Aliases Type Clones
-alias t1Pair  = tuple[loc file, int s, int end];
-alias t1clone = tuple[t1Pair x, t1Pair y];
+alias clonePair  = tuple[loc file, int s, int end];
+alias clone = tuple[clonePair x, clonePair y];
 
 /**
  * Function that convers clones in relation form to list of clone objects
  * @param	The two files that were the basis for the clone detection
  * @return	A list of clones
  */
-private list[t1clone] relToClones(filePair fp, crel clones) = 
+private list[clone] relToClones(filePair fp, crel clones) = 
 	[ <<fp.first, y1, y2>,<fp.second, x1, x2>> | <<x1,y1>,<x2,y2>> <- clones ];
 
 
-public tuple[list[t1clone] t1, list[t1clone] t3] GetClones(filePair fp, LineMatrix mat, int minimumLengthT1, int minSubLengthT3, int maxHolet3)
+public tuple[list[clone] t1, list[clone] t3] GetClones(filePair fp, LineMatrix mat, int minimumLengthT1, int minSubLengthT3, int maxHolet3)
 {
 	crel t1rel = GetT1Relations(mat, fp.first == fp.second);
 	crel t1clonesAsRel = GetT1Clones(t1rel, minimumLengthT1);
 	
 	// convert releation to clones
-	list[t1clone] t1Clones = relToClones(fp, t1clonesAsRel);
+	list[clone] t1Clones = relToClones(fp, t1clonesAsRel);
 	
 	t3Relations = GetT3Relations(t1rel, minSubLengthT3, maxHolet3);
 	t3cloneRelation = GetT3Clones(t3Relations, t1rel);
@@ -122,9 +122,9 @@ public tuple[list[t1clone] t1, list[t1clone] t3] GetClones(filePair fp, LineMatr
  * Function that 'pretty prints' a list of type1 clones
  * @param	The list of type1 clones to be printed 
  */
-public void PrintT1Clones(list[t1clone] t1clones)
+public void PrintT1Clones(list[clone] clones)
 {
-	for (c <- t1clones) {
+	for (c <- clones) {
 		println("<c.x.file.file> [<c.x.s>..<c.x.end>] - <c.y.file.file> [<c.y.s>..<c.y.end>]");
 	}
 }

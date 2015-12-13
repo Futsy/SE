@@ -84,12 +84,17 @@ public void printFileMatrix(fileMatrix matrix)
 {
 	for (fp <- matrix) {
 		println("<fp.first.file> vs <fp.second.file>");
-		for (row <- matrix[fp])	{
-			str output = "";
-			for (col <- row) {
-				output += col ? "*" : "-";
-			}
-			println(output);
+		printLineMatrix(fp);
+	}
+}
+
+public void printLineMatrix(LineMatrix matrix)
+{
+	for (row <- matrix)	{
+		str output = "";
+		for (col <- row) {
+			output += col ? "* " : "- ";
 		}
+		println(output);
 	}
 }

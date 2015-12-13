@@ -11,14 +11,14 @@ import Relation;
 import Set;
 import String;
 
-import MatchDetection::Text::Type1;
+import MatchDetection::Text::CloneDetection;
 
 /**
  * Function that creates the json output
  * @param	All the clones per file (t1 and t3)
  * @param	All lines of code per file
  */
-public void CreateJson(rel[loc, t1clone] clones, map[loc,list[str]] lines)
+public void CreateJson(rel[loc, clone] clones, map[loc,list[str]] lines)
 {
 	loc project = |project://Assignment2/output/input.json|;
 	writeFile(project, NewLine("["));
@@ -77,7 +77,7 @@ private void OutputNonDuplicates(loc project, set[loc] nonDupeFiles)
  * @param	All the lines in the project
  * @param	The list of clones with this file
  */
-private void CreateDuplicateObjects(loc project, map[loc,list[str]] lines, rel[t1Pair x, t1Pair y] mapsTo)
+private void CreateDuplicateObjects(loc project, map[loc,list[str]] lines, rel[clonePair x, clonePair y] mapsTo)
 {
 	appendToFile(project, NewLine("\"duplicate\": ["));
 	
@@ -114,7 +114,7 @@ private void CreateDuplicateObjects(loc project, map[loc,list[str]] lines, rel[t
  * @param	The json file location
  * @param	The list of clones with this file
  */
-private void CreateImportObjects(loc project, rel[t1Pair x, t1Pair y] mapsTo)
+private void CreateImportObjects(loc project, rel[clonePair x, clonePair y] mapsTo)
 {
 	appendToFile(project, NewLine("\"imports\":["));
 	int j = 0;
@@ -142,5 +142,5 @@ private str FixPathing(str input)
  * @return	"false" - if not a self duplicate
  *			"true"  - if it has a duplicate in its own file 
  */
-private str SelfDuplicate(rel[t1Pair x, t1Pair y] mapsTo)
+private str SelfDuplicate(rel[clonePair x, clonePair y] mapsTo)
 	= NewLine("\"selfLink\":" + (size({file | file <- mapsTo, file.y.file == file.x.file}) > 0 ? "true" : "false"));
